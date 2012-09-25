@@ -1,0 +1,22 @@
+{
+    "name": "modesl",
+    "version": "0.0.1",
+    "description": "FreeSWITCH ESL Node.js Implementation",
+    "keywords": "freeswitch api wrapper esl event socket library",
+    "author": "Chad Engler <Chad.Engler@patlive.com>",
+    "homepage": "https://github.patlive.local/Chad-Engler/node-esl",
+    "repository": {
+	"type": "git",
+	"url": "https://github.patlive.local/Chad-Engler/node-esl.git"
+    },
+    "main": "lib/esl.js",
+    "files": ["lib/esl.js"],
+    "dependencies": {
+	"utile": "git+https://github.com/englercj/utile.git",
+	"microtime": "0.3.x"
+    },
+    "engines": {
+	"node": ">=0.6.x"
+    },
+    "private": true
+}

@@ -6,7 +6,7 @@ A Library for handling low-level FreeSWITCH ESLconnections, and associated ESLev
 
 Though there is already a Node.js "library" for this [on github](https://github.com/shimaore/esl),
 it does not actually implement the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
-interface, and instead has it's own thing that really doesn't work all that well. Plus,it is written
+interface, and instead has it's own thing that really doesn't work all that well. Plus, it is written
 in coffee script making it stupid to maintain.
 
 ### Installation
@@ -17,7 +17,7 @@ The easiest way to install is via npm:
 npm install git+https://github.patlive.local/Chad-Engler/node-esl.git
 ```
 
-This package is not published to the public registry so far.
+This package is not published to the public registry, yet.
 
 ### Usage
 
@@ -28,14 +28,14 @@ var esl = require('modesl'),
 conn = new esl.Connection('127.0.0.1', 8021, 'clueCon', function() {
     conn.api('status', function(res) {
         //res is an esl.Event instance
-	console.log(res.getBody());
+        console.log(res.getBody());
     });
 });
 ```
 
 ### Interface
 
-This library exposes 2 main classes:
+This library exposes 3 main classes:
 
  * `esl.Connection`
  * `esl.Event`
@@ -43,8 +43,9 @@ This library exposes 2 main classes:
 
 Which implement the [ESLconnection](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESLconnection_Object)
 and [ESLevent](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESLevent_Object) interfaces, respectively.
-The `esl` object actually exported from this module is considered to implement the 
-[ESL Object](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESL_Object) interface.
+The `esl.Server` object is for creating a server to manage multiple "Outbound" connections; that is, multiple
+`esl.Connection` objects coming _from_ FreeSWITCH. The `esl` object actually exported from this module is
+considered to implement the [ESL Object](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESL_Object) interface.
 
 You can read the documentation about the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
 to understand what each function does. However, there are a couple caveats. This interface was meant to be blocking
@@ -84,7 +85,7 @@ still be only 1 Channel Connection instance. To solve this issue, the second for
 Node's [`net.Socket`](http://nodejs.org/api/net.html#net_class_net_socket). In this way you can do the server
 management yourself (or using `esl.Server` to do it for you).
 
-This changes the constructor call for an "Inbound" connection to look like:
+This changes the constructor call for an "Outbound" connection to look like:
 
 ```javascript
 var conn = new esl.Connection(socket[, readyCallback]);
@@ -120,7 +121,7 @@ interface, the API is the same as on that page. The code is also ___heavily___ c
 function in full. However, since some function prototypes changed slightly in translation, and for quick
 reference they are listed below:
 
-#### `esl`
+#### `esl` (Module Export)
 
  - `esl.setLogLevel(level)`
  - `esl.Connection`
@@ -150,10 +151,9 @@ reference they are listed below:
  - `disconnect()`
  - `auth([callback {function}])`
 
-#### 'esl.Event`
+#### `esl.Event`
 
  - `Event.PRIORITY` (object containing valid priorities)
-
  - `Event(type {string}[, subclass {string}])` (ctor)
  - `Event(headers {object}[, body {string}])` (ctor)
  - `serialize([format {string:'plain'|'xml'|'json'}])` (defaults to 'plain')

@@ -114,7 +114,54 @@ This function is part of the crazy event system FreeSWITCH has to implement in n
 a better event system than this, so all this function does is `connection.once('esl::event', cb);`. You could
 just do the same yourself, but the function is here to meet the interface.
 
-### Library API Documentation
+### Library Events
+
+Below is a comprehensive list of the events that an `esl.Connection` instance will emit, along with a description, and a callback parameter list.
+
+ - `ready`
+  - The connection is ready; it is both connected and authenticated.
+  - params: `none`
+ - `error`
+  - An error has occurred
+  - params: `(error {Error})`
+ - `esl::event`
+  - Called each time an event is picked up from FSW by the Client
+  - params: `(event {esl.Event})`
+ - `esl::event::<Event-Name>`
+  - Each event where the "body" is actually an event is emitted on this channel where <Event-Name> is the Event's Name
+  - params: `(event {esl.Event})`
+ - `esl::connect`
+  - The connection has connected to FSW, but has not authenticated.
+  - params: `none`
+ - `esl::auth::request`
+  - FSW has requested authentication from the Library; The Library with auth for you.
+  - params: `(event {esl.Event})`
+ - `esl::auth::success`
+  - Authentication with FSW has passed; the `readyCallback`, if specified, is also called.
+  - params: `none`
+ - `esl::auth::fail`
+  - Authentication with FSW has failed
+  - params: `none`
+ - `esl::command::reply`
+  - A reply to an issued command has come back
+  - params: `(reply {esl.Event})`
+ - `esl::api::response`
+  - A response to an issued api command has come back
+  - params: `(response {esl.Event})`
+ - `esl::channel::data`
+  - A CHANNEL_DATA event has reached the Library; this only happens on initial connection of "Outbound" sockets.
+  - params: `(info {esl.Event})`
+ - `esl::log::data`
+  - A log event from FSW
+  - params: `(log {esl.Event})`
+ - `esl::disconnect::notice`
+  - FSW has notified the library it will be disconnected
+  - params: `(event {esl.Event})`
+ - `esl::raw::<Content-Type>`
+  - Any Content-Type not parsed by the library is emmited on this channel, where <Content-Type> is the Event's Content-Type header value
+  - params: `(event {esl.Event})`
+
+### Library API
 
 Since this library implements the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
 interface, the API is the same as on that page. The code is also ___heavily___ commented describing each

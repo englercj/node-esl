@@ -12,8 +12,7 @@
     "main": "lib/esl.js",
     "files": ["lib/esl.js"],
     "dependencies": {
-	"utile": "git+https://github.com/englercj/utile.git",
-	"microtime": "0.3.x"
+	"utile": "git+https://github.com/englercj/utile.git"
     },
     "engines": {
 	"node": ">=0.6.x"

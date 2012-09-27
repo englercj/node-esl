@@ -140,7 +140,7 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dd>Called each time an event is picked up from FSW by the Client</dd>
 
     <dt><code>esl::event::EVENT_NAME(evt {esl.Event})</code></dt>
-    <dd>Each event where the "body" is actually an event is emitted on this channel where <Event-Name> is the Event's Name</dd>
+    <dd>Each event where the "body" is actually an event is emitted on this channel where EVENT_NAME is the Event's Event-Name header value</dd>
     
     <dt><code>esl::connect()</code></dt>
     <dd>The connection has connected to FSW, but has not authenticated.</dd>
@@ -170,7 +170,7 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dd>FSW has notified the library it will be disconnected</dd>
 
     <dt><code>esl::raw::CONTENT_TYPE(evt {esl.Event})</code></dt>
-    <dd>Any Content-Type not parsed by the library is emmited on this channel, where <Content-Type> is the Event's Content-Type header value</dd>
+    <dd>Any Content-Type not parsed by the library is emmited on this channel, where CONTENT_TYPE is the Event's Content-Type header value</dd>
 </dl>
 
 ### Library API

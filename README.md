@@ -25,13 +25,27 @@ The most basic usage example is to open a connection, and send a status command:
 
 ```javascript
 var esl = require('modesl'),
-conn = new esl.Connection('127.0.0.1', 8021, 'clueCon', function() {
+conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
     conn.api('status', function(res) {
         //res is an esl.Event instance
         console.log(res.getBody());
     });
 });
 ```
+
+Something to be aware of is that _all_ functions that interact with FreeSWITCH are asynchronous on the Library side.
+However, there are many functions (`api`, `execute`, etc) that are synchronous on the FreeSWITCH side. Because of this
+the event you will get back in your callback on, for example, `api` and the same command on `bgapi` will be different.
+
+The `api` command's callback will be executed immediately when the `command/reply` message is received, with all the
+returned data. However, that same command using `bgapi` will _not_ call the callback when the `command/reply` message
+is received, this is because FreeSWITCH returns the `command/reply` message immediate for background commands __before
+the command is run__. The Library will automatically track the command, and call the callback on the `BACKGROUND_JOB`
+message that denotes a completed Background Job.
+
+The body for the same command issued with `api` and `bgapi` should be the same; even when the headers, event type, and
+time it takes for the callback to execute are different. The Library attempts to smooth these differences out by providing
+a common interface, even though behind the scenes things are quite different.
 
 ### Interface
 
@@ -74,11 +88,9 @@ var conn = new esl.Connection(fd);
 
 The reasoning is because, according to the documentation:
 
-```
-The standard method for using this function is to listen for an incomingconnection on a socket, accept
-the incoming connection from FreeSWITCH, fork a new copy of your process if you want to listen for more
-connections, and then pass the file number of the socket to new($fd).
-````
+> The standard method for using this function is to listen for an incomingconnection on a socket, accept
+> the incoming connection from FreeSWITCH, fork a new copy of your process if you want to listen for more
+> connections, and then pass the file number of the socket to new($fd).
 
 However, node doesn't need to fork to accept multiple connections. But an `esl.Connection` instance should
 still be only 1 Channel Connection instance. To solve this issue, the second form will accept an instance of
@@ -136,14 +148,23 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dt><code>error(err {Error})</code></dt>
     <dd>An error has occurred
 
-    <dt><code>esl::event(evt {esl.Event})</code></dt>
+    <dt><code>esl::*([evt {esl.Event}])</code></dt>
+    <dd>Will pick up any esl event emitted from the Library, including `connect` and other events with no parameters</dd>
+
+    <dt><code>esl::event::*(evt {esl.Event})</code></dt>
     <dd>Called each time an event is picked up from FSW by the Client</dd>
 
     <dt><code>esl::event::EVENT_NAME(evt {esl.Event})</code></dt>
     <dd>Each event where the "body" is actually an event is emitted on this channel where EVENT_NAME is the Event's Event-Name header value</dd>
+
+    <dt><code>esl::event::EVENT_NAME::EVENT_UUID(evt {esl.Event})</code></dt>
+    <dd>Each event is emitted with a UUID, the EVENT_UUID is determined by first checking for a `Job-UUID` (background job uuid), then `Unique-ID` (channel uuid), and finally the `Core-UUID` (message's uuid). This to tracka  particular job, channel, or message stream.</dd>
     
     <dt><code>esl::connect()</code></dt>
     <dd>The connection has connected to FSW, but has not authenticated.</dd>
+    
+    <dt><code>esl::auth::*([evt {esl.Event}])</code></dt>
+    <dd>Picks up any auth event, whether it is `request`, `success`, or `fail`</dd>
 
     <dt><code>esl::auth::request(evt {esl.Event})</code></dt>
     <dd>FSW has requested authentication from the Library; The Library with auth for you.</dd>
@@ -168,6 +189,9 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
 
     <dt><code>esl::disconnect::notice(evt {esl.Event})</code></dt>
     <dd>FSW has notified the library it will be disconnected</dd>
+
+    <dt><code>esl::raw::*(evt {esl.Event})</code></dt>
+    <dd>Captures any raw event that had a Content-Type the Library did not parse</dd>
 
     <dt><code>esl::raw::CONTENT_TYPE(evt {esl.Event})</code></dt>
     <dd>Any Content-Type not parsed by the library is emmited on this channel, where CONTENT_TYPE is the Event's Content-Type header value</dd>
@@ -209,6 +233,9 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - `setEventLock(value {boolean})`
  - `disconnect()`
  - `auth([callback {function}])`
+ - `subscribe(events {string|array}[, callback {function}]`
+ - `originate(profile {string}, gateway {string}, number {string}[, app {string}][, sync {boolean}][, callback {function}])`
+ - `message(to {string}, from {string}, profile {string}, body {string}[, subject {string}][, callback])`
 
 #### `esl.Event`
 

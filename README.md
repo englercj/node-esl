@@ -286,4 +286,4 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
   * `options` defaults to the following:
    - `{ port: 8022, host: '127.0.0.1', server: null }`
    - If server is specified it will be used instead of creating a server (and port/host will be ignored)
-   - __WARNING:__ Do not pass a server whose 'listening' event hsa not yet been called.
+   - __WARNING:__ Only pass a `server` after its [`listening`](http://nodejs.org/api/net.html#net_event_listening) event has been fired.

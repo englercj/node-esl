@@ -167,6 +167,9 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     
     <dt><code>esl::connect()</code></dt>
     <dd>The connection has connected to FSW, but has not authenticated.</dd>
+
+    <dt><code>esl::end()</code></dt>
+    <dd>The connection to FreeSWITCH has closed</dd>
     
     <dt><code>esl::auth::*([evt {esl.Event}])</code></dt>
     <dd>Picks up any auth event, whether it is `request`, `success`, or `fail`</dd>

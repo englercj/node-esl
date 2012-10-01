@@ -57,7 +57,7 @@ This library exposes 3 main classes:
 
  * `esl.Connection`
  * `esl.Event`
- * `esl.Server` [Coming in `v0.0.2`]
+ * `esl.Server`
  * `esl.Parser` (Used internally for parsing the raw socket stream; __not for public use__)
 
 Which implement the [ESLconnection](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESLconnection_Object)
@@ -108,7 +108,7 @@ This changes the constructor call for an "Outbound" connection to look like:
 var conn = new esl.Connection(socket[, readyCallback]);
 ```
 
-The readyCallback is called once the connection is stored, and a `CHANNEL_DATA` event is received.
+The readyCallback is called once the connection is stored, the `connect` command is issued, and a `CHANNEL_DATA` event is received.
 
 #### `esl.Connection::sendRecv(command[, args][, body][, callback]);`
 
@@ -143,6 +143,11 @@ conn.on('ready', function() {
 
 });
 ```
+
+The `esl.Connection` object uses [`EventEmitter2`](https://github.com/hij1nx/EventEmitter2) to
+send namespaced events. For example every event raises the `esl::event::<EVENT_NAME>` event, where
+`<EVENT_NAME>` is the name of the event. Listening to `esl::event::*` will be called everytime an
+event is fired.
 
 Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {typeN})`:
 
@@ -205,6 +210,19 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dd>Any Content-Type not parsed by the library is emmited on this channel, where CONTENT_TYPE is the Event's Content-Type header value</dd>
 </dl>
 
+And here are the events that will be emitted by `esl.Server`; it also uses EventEmitter2:
+
+<dl>
+    <dt><code>connection::open(connection {esl.Connection})</code></dt>
+    <dd>FreeSWITCH has opened a connection to the server, however the connection object is not ready to be used yet</dd>
+
+    <dt><code>connection::ready(connection {esl.Connection})</code></dt>
+    <dd>A newly opened connection is now ready to be used</dd>
+
+    <dt><code>connection::close(connection {esl.Connection})</code></dt>
+    <dd>A connection has been closed</dd>
+</dl>
+
 ### Library API
 
 Since this library implements the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
@@ -260,3 +278,18 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - `delHeader(name {string})`
  - `firstHeader()`
  - `nextHeader()`
+
+#### `esl.Server`
+
+ - `Server([options {object}][, readyCb {function}])`
+  * `readyCb` is called once the server is listening for connections
+  * `options` defaults to the following:
+```javascript
+{
+  port: 8022,
+  host: '127.0.0.1',
+  server: null
+  //server overrides port/host options with the port/host of the passed server
+  //DO NOT PASS server TO THE LIBRARY UNTIL ITS listening CALLBACK HAS BEEN CALLED
+}
+```

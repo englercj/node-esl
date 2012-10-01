@@ -6,18 +6,22 @@ A Library for handling low-level FreeSWITCH ESLconnections, and associated ESLev
 
 Though there is already a Node.js "library" for this [on github](https://github.com/shimaore/esl),
 it does not actually implement the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
-interface, and instead has it's own thing that really doesn't work all that well. Plus, it is written
-in coffee script making it stupid to maintain.
+interface, and instead has it's own thing. This library was written to implement the full Event
+Socket Library interface, and provide a meaningful semantic when dealing with FreeSWITCH in Node.js.
+
+This library supports both "Inbound" (connection going _into_ FreeSWITCH) and "Outbound" (connections
+coming _out_ of FreeSWITCH). Also included is a helper `esl.Server` object that manages multiple
+`esl.Connection` objects; making it trivial to have multiple "Outbound" connections from FreeSWITCH.
 
 ### Installation
 
 The easiest way to install is via npm:
 
 ```shell
-npm install git+https://github.patlive.local/Chad-Engler/node-esl.git
+npm install modesl
 ```
 
-This package is not published to the public registry, yet.
+As in "Mod ESL".
 
 ### Usage
 
@@ -39,7 +43,7 @@ the event you will get back in your callback on, for example, `api` and the same
 
 The `api` command's callback will be executed immediately when the `command/reply` message is received, with all the
 returned data. However, that same command using `bgapi` will _not_ call the callback when the `command/reply` message
-is received, this is because FreeSWITCH returns the `command/reply` message immediate for background commands __before
+is received, this is because FreeSWITCH returns the `command/reply` message immediately for background commands __before
 the command is run__. The Library will automatically track the command, and call the callback on the `BACKGROUND_JOB`
 message that denotes a completed Background Job.
 
@@ -53,7 +57,8 @@ This library exposes 3 main classes:
 
  * `esl.Connection`
  * `esl.Event`
- * `esl.Server` [Coming Soon]
+ * `esl.Server` [Coming in `v0.0.2`]
+ * `esl.Parser` (Used internally for parsing the raw socket stream; __not for public use__)
 
 Which implement the [ESLconnection](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESLconnection_Object)
 and [ESLevent](http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESLevent_Object) interfaces, respectively.
@@ -209,7 +214,7 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - `esl.setLogLevel(level)`
  - `esl.Connection`
  - `esl.Event`
- - `esl.Server` [Coming Soon]
+ - `esl.Server` [Coming in `v0.0.2`]
 
 #### `esl.Connection`
 

@@ -284,12 +284,6 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - `Server([options {object}][, readyCb {function}])`
   * `readyCb` is called once the server is listening for connections
   * `options` defaults to the following:
-```javascript
-{
-  port: 8022,
-  host: '127.0.0.1',
-  server: null
-  //server overrides port/host options with the port/host of the passed server
-  //DO NOT PASS server TO THE LIBRARY UNTIL ITS listening CALLBACK HAS BEEN CALLED
-}
-```
+   - `{ port: 8022, host: '127.0.0.1', server: null }`
+   - If server is specified it will be used instead of creating a server (and port/host will be ignored)
+   - __WARNING:__ Do not pass a server whose 'listening' event hsa not yet been called.

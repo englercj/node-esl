@@ -128,7 +128,7 @@ The `jobid` argument is not currently implemented and will be ignored.
 #### `esl.Connection::recvEvent(callback);`
 
 This function is part of the crazy event system FreeSWITCH has to implement in non-evented languages. Node has
-a better event system than this, so all this function does is `connection.once('esl::event', cb);`. You could
+a better event system than this, so all this function does is `connection.once('esl::event::*', cb);`. You could
 just do the same yourself, but the function is here to meet the interface.
 
 ### Library Events
@@ -281,3 +281,17 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
    - `{ port: 8022, host: '127.0.0.1', server: null }`
    - If server is specified it will be used instead of creating a server (and port/host will be ignored)
    - __WARNING:__ Only pass a `server` after its [`listening`](http://nodejs.org/api/net.html#net_event_listening) event has been fired.
+
+### TODO
+
+ - Add tests for `esl.Connection`, `esl.Parser`, and `esl.Server`
+ - Add more examples for
+  * SMS Messaging
+  * IVR App
+  * Faxing App
+  * fs_cli clone
+ - Add more abstraction/sugar functions
+ - Build out the Wiki and trim down the README
+ - Add LICENSE file
+ - Implement the logging of `log/data` events
+ - Implement `bgapi`'s `jobid` parameter

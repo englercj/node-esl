@@ -134,29 +134,30 @@ just do the same yourself, but the function is here to meet the interface.
 ### Library Events
 
 
-Below is a comprehensive list of the events that an `esl.Connection` instance will emit, along with parameters,
-and description. You can listen to any event like this:
+Below is a comprehensive list of the events that the library can emit, along with parameters, and description.
 
-```javascript
-var conn = new Connection('127.0.0.1', 8021, 'clueCon');
-conn.on('ready', function() {
+Both the `esl.Connection` and `esl.Server` objects use [`EventEmitter2`](https://github.com/hij1nx/EventEmitter2)
+to send namespaced events. For example every event raises the `esl::event::EVENT_NAME::EVENT_UUID` event, where
+`EVENT_NAME` is the name of the event and `EVENT_UUID` is the uuid of the event. Listening to `esl::event::*` will
+give you every event with any name with any uuid; whereas `esl::event::MESSAGE::*` will give you only each MESSAGE
+event, reguardless of uuid.
 
-});
-```
-
-The `esl.Connection` object uses [`EventEmitter2`](https://github.com/hij1nx/EventEmitter2) to
-send namespaced events. For example every event raises the `esl::event::<EVENT_NAME>` event, where
-`<EVENT_NAME>` is the name of the event. Listening to `esl::event::*` will be called everytime an
-event is fired.
+#### `esl.Connection` Events
 
 Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {typeN})`:
 
 <dl>
-    <dt><code>ready()</code></dt>
+    <dt><code>error(err {Error})</code></dt>
+    <dd>An error has occurred, this is not namespaced to `esl::` as to match node's error event system</dd>
+
+    <dt><code>esl::connect()</code></dt>
+    <dd>The connection has connected to FSW, but has not authenticated.</dd>
+
+    <dt><code>esl::ready()</code></dt>
     <dd>The connection is ready; it is both connected and authenticated.</dd>
     
-    <dt><code>error(err {Error})</code></dt>
-    <dd>An error has occurred
+    <dt><code>esl::end()</code></dt>
+    <dd>The connection to FreeSWITCH has closed</dd>
 
     <dt><code>esl::*([evt {esl.Event}])</code></dt>
     <dd>Will pick up any esl event emitted from the Library, including `connect` and other events with no parameters</dd>
@@ -164,53 +165,46 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dt><code>esl::event::*(evt {esl.Event})</code></dt>
     <dd>Called each time an event is picked up from FSW by the Client</dd>
 
-    <dt><code>esl::event::EVENT_NAME(evt {esl.Event})</code></dt>
-    <dd>Each event where the "body" is actually an event is emitted on this channel where EVENT_NAME is the Event's Event-Name header value</dd>
+    <dt><code>esl::event::EVENT_NAME::*(evt {esl.Event})</code></dt>
+    <dd>Each event is emitted on this channel where `EVENT_NAME` is the Event's `Event-Name` header value</dd>
 
     <dt><code>esl::event::EVENT_NAME::EVENT_UUID(evt {esl.Event})</code></dt>
-    <dd>Each event is emitted with a UUID, the EVENT_UUID is determined by first checking for a `Job-UUID` (background job uuid), then `Unique-ID` (channel uuid), and finally the `Core-UUID` (message's uuid). This to tracka  particular job, channel, or message stream.</dd>
-    
-    <dt><code>esl::connect()</code></dt>
-    <dd>The connection has connected to FSW, but has not authenticated.</dd>
+    <dd>Each event is emitted with a UUID, the `EVENT_UUID` is determined by first checking for a `Job-UUID` (background job uuid), then `Unique-ID` (channel uuid), and finally the `Core-UUID` (message's uuid). This to track a particular job, channel, or message stream.</dd>
 
-    <dt><code>esl::end()</code></dt>
-    <dd>The connection to FreeSWITCH has closed</dd>
-    
-    <dt><code>esl::auth::*([evt {esl.Event}])</code></dt>
+    <dt><code>esl::event::auth::*([evt {esl.Event}])</code></dt>
     <dd>Picks up any auth event, whether it is `request`, `success`, or `fail`</dd>
 
-    <dt><code>esl::auth::request(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::auth::request(evt {esl.Event})</code></dt>
     <dd>FSW has requested authentication from the Library; The Library with auth for you.</dd>
 
-    <dt><code>esl::auth::success()</code></dt>
+    <dt><code>esl::event::auth::success()</code></dt>
     <dd>Authentication with FSW has passed; the `readyCallback`, if specified, is also called.</dd>
 
-    <dt><code>esl::auth::fail()</code></dt>
+    <dt><code>esl::event::auth::fail()</code></dt>
     <dd>Authentication with FSW has failed</dd>
 
-    <dt><code>esl::command::reply(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::command::reply(evt {esl.Event})</code></dt>
     <dd>A reply to an issued command has come back</dd>
 
-    <dt><code>esl::api::response(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::api::response(evt {esl.Event})</code></dt>
     <dd>A response to an issued api command has come back</dd>
 
-    <dt><code>esl::channel::data(evt {esl.Event})</code></dt>
-    <dd>A CHANNEL_DATA event has reached the Library; this only happens on initial connection of "Outbound" sockets.</dd>
-
-    <dt><code>esl::log::data(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::log::data(evt {esl.Event})</code></dt>
     <dd>A log event from FSW</dd>
 
-    <dt><code>esl::disconnect::notice(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::disconnect::notice(evt {esl.Event})</code></dt>
     <dd>FSW has notified the library it will be disconnected</dd>
 
-    <dt><code>esl::raw::*(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::raw::*(evt {esl.Event})</code></dt>
     <dd>Captures any raw event that had a Content-Type the Library did not parse</dd>
 
-    <dt><code>esl::raw::CONTENT_TYPE(evt {esl.Event})</code></dt>
-    <dd>Any Content-Type not parsed by the library is emmited on this channel, where CONTENT_TYPE is the Event's Content-Type header value</dd>
+    <dt><code>esl::event::raw::CONTENT_TYPE(evt {esl.Event})</code></dt>
+    <dd>Any Content-Type not parsed by the library is emmited on this channel, where `CONTENT_TYPE` is the Event's `Content-Type` header value</dd>
 </dl>
 
-And here are the events that will be emitted by `esl.Server`; it also uses EventEmitter2:
+#### `esl.Server` Events
+
+Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {typeN})`:
 
 <dl>
     <dt><code>connection::open(connection {esl.Connection})</code></dt>

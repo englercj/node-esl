@@ -148,7 +148,7 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
 
 <dl>
     <dt><code>error(err {Error})</code></dt>
-    <dd>An error has occurred, this is not namespaced to `esl::` as to match node's error event system</dd>
+    <dd>An error has occurred, this is not namespaced to <code>esl::</code> as to match node's error event system</dd>
 
     <dt><code>esl::connect()</code></dt>
     <dd>The connection has connected to FSW, but has not authenticated.</dd>
@@ -160,19 +160,19 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dd>The connection to FreeSWITCH has closed</dd>
 
     <dt><code>esl::*([evt {esl.Event}])</code></dt>
-    <dd>Will pick up any esl event emitted from the Library, including `connect` and other events with no parameters</dd>
+    <dd>Will pick up any esl event emitted from the Library, including <code>connect</code> and other events with no parameters</dd>
 
     <dt><code>esl::event::*(evt {esl.Event})</code></dt>
     <dd>Called each time an event is picked up from FSW by the Client</dd>
 
     <dt><code>esl::event::EVENT_NAME::*(evt {esl.Event})</code></dt>
-    <dd>Each event is emitted on this channel where `EVENT_NAME` is the Event's `Event-Name` header value</dd>
+    <dd>Each event is emitted on this channel where <CODE>EVENT_NAME</CODE> is the Event's <code>Event-Name</code> header value</dd>
 
     <dt><code>esl::event::EVENT_NAME::EVENT_UUID(evt {esl.Event})</code></dt>
-    <dd>Each event is emitted with a UUID, the `EVENT_UUID` is determined by first checking for a `Job-UUID` (background job uuid), then `Unique-ID` (channel uuid), and finally the `Core-UUID` (message's uuid). This to track a particular job, channel, or message stream.</dd>
+    <dd>Each event is emitted with a UUID, the <CODE>EVENT_UUID</CODE> is determined by first checking for a <code>Job-UUID</code> (background job uuid), then <code>Unique-ID</code> (channel uuid), and finally the <code>Core-UUID</code> (message's uuid). This to track a particular job, channel, or message stream.</dd>
 
     <dt><code>esl::event::auth::*([evt {esl.Event}])</code></dt>
-    <dd>Picks up any auth event, whether it is `request`, `success`, or `fail`</dd>
+    <dd>Picks up any auth event, whether it is <code>request</code>, <code>success</code>, or <code>fail</code></dd>
 
     <dt><code>esl::event::auth::request(evt {esl.Event})</code></dt>
     <dd>FSW has requested authentication from the Library; The Library with auth for you.</dd>

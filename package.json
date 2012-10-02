@@ -12,7 +12,7 @@
     "bugs": "https://github.com/englercj/node-esl/issues",
     "main": "lib/esl.js",
     "dependencies": {
-	"utile": "git+https://github.com/englercj/utile.git"
+	"utile": "0.1.x"
     },
     "engines": {
 	"node": ">=0.6.x"

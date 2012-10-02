@@ -229,7 +229,7 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - `esl.setLogLevel(level)`
  - `esl.Connection`
  - `esl.Event`
- - `esl.Server` [Coming in `v0.0.2`]
+ - `esl.Server`
 
 #### `esl.Connection`
 

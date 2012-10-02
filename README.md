@@ -226,7 +226,7 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
 
 #### `esl` (Module Export)
 
- - `esl.setLogLevel(level)`
+ - `esl.setLogLevel([level {number}])`
  - `esl.Connection`
  - `esl.Event`
  - `esl.Server`

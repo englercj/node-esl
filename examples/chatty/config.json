@@ -1,0 +1,14 @@
+{
+    "fsw": {
+	"host": "127.0.0.1",
+	"port": 8021,
+	"password": "ClueCon"
+    },
+    "server": {
+	"host": "0.0.0.0",
+	"port": 8181,
+	"provider": "sms-proxy.yourprovider.com",
+	"from": "from_number@from_host",
+	"profile": "external"
+    }
+}

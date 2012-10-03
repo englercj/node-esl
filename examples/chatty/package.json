@@ -1,0 +1,21 @@
+{
+    "name": "chatty",
+    "version": "0.0.1",
+    "description": "Real-Time Chat application to talk to Phones via SMS",
+    "author": "Chad Engler <Chad.Engler@patlive.com>",
+    "homepage": "https://github.patlive.local/Chad-Engler/chatty",
+    "repository": {
+	"type": "git",
+	"url": "https://github.patlive.local/Chad-Engler/node-esl.git"
+    },
+    "dependencies": {
+	"utile": "git+https://github.com/englercj/utile.git",
+	"modesl": "git+https://github.patlive.local/Chad-Engler/node-esl.git",
+	"express": "3.x",
+	"socket.io": "0.9.x"
+    },
+    "engines": {
+	"node": ">=0.8.x"
+    },
+    "private": true
+}

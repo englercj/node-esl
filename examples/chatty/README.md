@@ -7,15 +7,13 @@ a real-time webchat with a cell phone via text messages.
 
 ### Installation
 
-simply run npm install from within the `examples/chatty` directory
+#### Configure FreeSWITCH
 
-```shell
-cd examples/chatty
-npm install
-```
+First you need to install and configure `mod_sms`. You can find instructions for this on
+the [Mod SMS](http://wiki.freeswitch.org/wiki/Mod_sms) Wiki Page.
 
-Make sure you make the action in your chatplan include `application="fire"` or the events
-will not fire over ESL.
+You will also need to ensure that your chatplan includes the `<action application="fire" data=""/>`
+directive so that SIP `MESSAGE`s are broadcasted to the Event Sockets.
 
 Here is an example `conf/chatplan/default.xml`
 
@@ -32,6 +30,15 @@ Here is an example `conf/chatplan/default.xml`
 
   </context>
 </include>
+```
+
+#### Install Chatty
+
+simply run npm install from within the `examples/chatty` directory
+
+```shell
+cd examples/chatty
+npm install
 ```
 
 ### Usage

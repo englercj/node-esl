@@ -121,10 +121,6 @@ but Node is _already evented_. Therefore this function will instead use the buil
 wait for `esl::command::reply` (the event emitted by this library on `command/reply`) then execute the callback
 if one was passed.
 
-#### `esl.Connection::bgapi(command[, args][, jobid][, callback]);`
-
-The `jobid` argument is not currently implemented and will be ignored.
-
 #### `esl.Connection::recvEvent(callback);`
 
 This function is part of the crazy event system FreeSWITCH has to implement in non-evented languages. Node has

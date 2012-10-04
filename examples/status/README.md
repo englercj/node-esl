@@ -7,7 +7,7 @@ demonstrate the simple syntax required to run a command using the `modesl` drive
 
 ### Installation
 
-Simply run `npm isntall` from within the `examples/status` directory
+Simply run `npm install` from within the `examples/status` directory
 
 ```shell
 cd exmaples/status

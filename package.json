@@ -12,7 +12,8 @@
     "bugs": "https://github.com/englercj/node-esl/issues",
     "main": "lib/esl.js",
     "dependencies": {
-	"utile": "0.1.x"
+	"utile": "0.1.x",
+	"eventemitter2": "0.4.x"
     },
     "devDependencies": {
 	"vows": "0.6.x"

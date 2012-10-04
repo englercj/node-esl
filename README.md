@@ -222,7 +222,7 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
 Since this library implements the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
 interface, the API is the same as on that page. The code is also ___heavily___ commented describing each
 function in full. However, since some function prototypes changed slightly in translation, and for quick
-reference they are listed below in the form `function_name(param1 {type1}, ..., paramN {typeN})`:
+reference, all functions are listed below in the form `function_name(param1 {type1}, ..., paramN {typeN})`:
 
 #### `esl` (Module Export)
 
@@ -247,8 +247,8 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - `recvEventTimed(ms {number}[, callback {function}])`
  - `filter(header {string}, value {string}[, callback {function}])`
  - `events(type {string:'plain'|'xml'|'json'}, events {string,array}[, callback {function}])`
- - `execute(app {?}, arg {?}, uuid {string})` (NOT IMPLEMENTED)
- - `executeAsync(app {?}, arg {?}, uuid {string})` (NOT IMPLEMENTED)
+ - `execute(app {?}, arg {?}, uuid {string})`
+ - `executeAsync(app {?}, arg {?}, uuid {string})`
  - `setAsyncExecute(value {boolean})`
  - `setEventLock(value {boolean})`
  - `disconnect()`

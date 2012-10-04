@@ -89,4 +89,8 @@ Chatty.prototype.start = function() {
 	    self.clients[n].emit('recvmsg', evt.getBody());
 	}
     });
+
+    self.fsw.on('error', function(err) {
+	console.log(err);
+    });
 };

@@ -1,0 +1,18 @@
+{
+    "name": "status",
+    "version": "0.0.1",
+    "description": "Simple status of FSW app",
+    "author": "Chad Engler <Chad.Engler@patlive.com>",
+    "homepage": "https://github.patlive.local/englercj/node-esl",
+    "repository": {
+	"type": "git",
+	"url": "https://github.patlive.local/englercj/node-esl.git"
+    },
+    "dependencies": {
+	"modesl": "0.x"
+    },
+    "engines": {
+	"node": ">=0.8.x"
+    },
+    "private": true
+}

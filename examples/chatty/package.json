@@ -3,10 +3,10 @@
     "version": "0.0.1",
     "description": "Real-Time Chat application to talk to Phones via SMS",
     "author": "Chad Engler <Chad.Engler@patlive.com>",
-    "homepage": "https://github.patlive.local/Chad-Engler/chatty",
+    "homepage": "https://github.com/englercj/node-esl",
     "repository": {
 	"type": "git",
-	"url": "https://github.patlive.local/Chad-Engler/node-esl.git"
+	"url": "https://github.com/englercj/node-esl.git"
     },
     "dependencies": {
 	"modesl": "0.x",

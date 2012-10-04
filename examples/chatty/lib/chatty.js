@@ -71,11 +71,11 @@ Chatty.prototype.start = function() {
 	});
     });
 
-    self.fsw.on('esl::event::*', function(evt) {
+    self.fsw.on('esl::event::**', function(evt) {
 	console.log('Event:', evt);
     });
 
-    self.fsw.on('esl::event::MESSAGE', function(evt) {
+    self.fsw.on('esl::event::MESSAGE::*', function(evt) {
 	var n = evt.getHeader('from_user'),
 	seq = parseInt(evt.getHeader('Event-Sequence'), 10);
 

@@ -138,13 +138,17 @@ Below is a comprehensive list of the events that the library can emit, along wit
 
 Both the `esl.Connection` and `esl.Server` objects use [`EventEmitter2`](https://github.com/hij1nx/EventEmitter2)
 to send namespaced events. For example every event raises the `esl::event::EVENT_NAME::EVENT_UUID` event, where
-`EVENT_NAME` is the name of the event and `EVENT_UUID` is the uuid of the event. Listening to `esl::event::*` will
+`EVENT_NAME` is the name of the event and `EVENT_UUID` is the uuid of the event. Listening to `esl::event::**` will
 give you every event with any name with any uuid; whereas `esl::event::MESSAGE::*` will give you only each MESSAGE
 event, reguardless of uuid.
 
+Note that two asterisks (`'**'`) with match anything accross multiple delimiters (`'::'`); while one asterisk does
+not match accross delimiters. That is `esl::**` will match `esl::connect`, `esl::event::EVENT_NAME`, etc.; while
+`esl::*` will only match `esl::connect`, `esl::ready`, and `esl::end`
+
 #### `esl.Connection` Events
 
-Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {typeN})`:
+Here is the event list (with some wildcards) in the form of `event_name(param1 {type1}, ..., paramN {typeN})`:
 
 <dl>
     <dt><code>error(err {Error})</code></dt>
@@ -159,10 +163,10 @@ Here is the event list in the form of `event_name(param1 {type1}, ..., paramN {t
     <dt><code>esl::end()</code></dt>
     <dd>The connection to FreeSWITCH has closed</dd>
 
-    <dt><code>esl::*([evt {esl.Event}])</code></dt>
+    <dt><code>esl::**([evt {esl.Event}])</code></dt>
     <dd>Will pick up any esl event emitted from the Library, including <code>connect</code> and other events with no parameters</dd>
 
-    <dt><code>esl::event::*(evt {esl.Event})</code></dt>
+    <dt><code>esl::event::**(evt {esl.Event})</code></dt>
     <dd>Called each time an event is picked up from FSW by the Client</dd>
 
     <dt><code>esl::event::EVENT_NAME::*(evt {esl.Event})</code></dt>

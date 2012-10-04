@@ -295,6 +295,7 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
  - Add LICENSE file
  - Implement the logging of `log/data` events
  - Implement `bgapi`'s `jobid` parameter
+ - Better error messages on `error` event
 
 ### License
 

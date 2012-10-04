@@ -286,11 +286,19 @@ reference they are listed below in the form `function_name(param1 {type1}, ..., 
    - If server is specified it will be used instead of creating a server (and port/host will be ignored)
    - __WARNING:__ Only pass a `server` after its [`listening`](http://nodejs.org/api/net.html#net_event_listening) event has been fired.
 
+### Tests
+
+To run the tests included with the module simply run the following in the root of the `modesl` folder:
+
+```shell
+npm test
+```
+
 ### TODO
 
  - Add tests for `esl.Connection`, `esl.Parser`, and `esl.Server`
  - Add more examples for
-  * SMS Messaging
+  * ~~SMS Messaging~~
   * IVR App
   * Faxing App
   * fs_cli clone

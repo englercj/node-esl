@@ -300,9 +300,9 @@ npm test
   * fs_cli clone
  - Add more abstraction/sugar functions
  - Build out the Wiki and trim down the README
- - Add LICENSE file
- - Implement the logging of `log/data` events
- - Implement `bgapi`'s `jobid` parameter
+ - ~~Add LICENSE file~~
+ - ~~Implement the logging of `log/data` events~~
+ - ~~Implement `bgapi`'s `jobid` parameter~~
  - Better error messages on `error` event
 
 ### License

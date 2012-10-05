@@ -1,6 +1,7 @@
 ## FreeSWITCH ESL Bindings for Node.js
 
 A Library for handling low-level FreeSWITCH ESLconnections, and associated ESLevents.
+More detailed documentation can be found in the [Wiki Pages](https://github.com/englercj/node-esl/wiki)
 
 ### Purpose
 

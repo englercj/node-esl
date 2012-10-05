@@ -64,11 +64,8 @@ Chatty.prototype.start = function() {
 
     //connect to freeswitch
     self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
-	//listen to ALL events, and ask for them to be json encoded
-	self.fsw.subscribe(function(evt) {
-	    self._configure();
-	    self._init();
-	});
+	self._configure();
+	self._init();
     });
 
     self.fsw.on('esl::event::**', function(evt) {

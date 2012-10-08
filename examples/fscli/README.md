@@ -1,4 +1,4 @@
-## Cli
+## Fscli
 
 This is a simple CLI example similar to fs_cli. It has nowhere near as many features,
 but shows a proof of concept of building an fs_cli clone in Node with node-esl.

@@ -1,0 +1,20 @@
+{
+    "name": "fscli",
+    "version": "0.0.1",
+    "description": "Simple fs_cli clone POC",
+    "author": "Chad Engler <Chad.Engler@patlive.com>",
+    "homepage": "https://github.com/englercj/node-esl",
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/englercj/node-esl.git"
+    },
+    "dependencies": {
+	"modesl": "0.x",
+	"director": "1.1.x",
+	"optimist": "0.3.x"
+    },
+    "engines": {
+	"node": ">=0.8.x"
+    },
+    "private": true
+}

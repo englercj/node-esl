@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+console.log('Connecting to FreeSWITCH...');
+
+var args = require('../lib/args').parse(),
+Cli = require('../lib/cli').Cli,
+cli = new Cli(args, function() {
+    cli.start();
+});

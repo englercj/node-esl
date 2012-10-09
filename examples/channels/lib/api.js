@@ -124,7 +124,7 @@ Api.prototype._setupBuffers = function() {
 
     //hybrid gets a full show to start, then subscribes to live updates
     var self = this;
-    self.fsw.show('channels', function(err, data) {
+    self.fsw.show('channels', 'xml', function(err, data) {
 	//update buffer, massage the array into an object
 	//so they are keyed by uuid instead of indexes
 	self.hybridBuffer.row_count = data.row_count;
@@ -282,9 +282,14 @@ Api.prototype._doShowPoll = function() {
     //store start time
     poll.last = Date.now();
 
-    self.fsw.show('channels', function(err, data, raw) {
+    self.fsw.show('channels', 'xml', function(err, data, raw) {
 	//capture end time for calculations later
 	var end = Date.now();
+
+	if(err) {
+	    console.log(err);
+	    return;
+	}
 
 	//update buffer, massage the array into an object
 	//so they are keyed by uuid instead of indexes

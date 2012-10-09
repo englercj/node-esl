@@ -1,0 +1,53 @@
+body { margin:0; padding:0; }
+
+dd { margin-bottom:10px; }
+
+h2 { margin-left:10px; }
+
+#message {
+    width:100%;
+    font-size:1.1em;
+    border-bottom:solid 1px #CCC;
+
+    padding:3px 20px;
+
+    color:#FFF;
+    text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+    border-bottom:solid 1px rgba(0, 0, 0, 0.25);
+
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+    background-repeat: repeat-x;
+}
+
+#message.good { background-color: #57a957; background-image: linear-gradient(top, #62c462, #57a957); }
+#message.bad { background-color: #c43c35; background-image: linear-gradient(top, #ee5f5b, #c43c35); }
+#message.info { background-color: #0064cd; background-image: linear-gradient(top, #049cdb, #0064cd); }
+
+#actions { margin:10px; }
+
+#channels { width:100%; border:solid 1px #CCC; border-collapse:collapse; }
+
+#channels tr:nth-of-type(odd) { background:#EEE; }
+#channels tr:hover { background:#3E92F2; cursor:pointer; }
+
+#channels th { background:#333; color:#FFF; font-weight:bold; }
+#channels td, th { padding:6px; border:solid 1px #CCC; text-align:left; }
+
+code { display:inline; padding:0 2px; font-size:1em; }
+
+pre.json {
+    display:block;
+    outline:solid 1px #CCC;
+    padding:5px;
+    margin:5px;
+    overflow:auto;
+    font-family:'Courier New',Courier,'Nimbus Mono L',monospace;
+    font-size:0.8em;
+    /*white-space:code-wrap;*/
+}
+pre.json .string, code .string { color: green; }
+pre.json .number, code .number { color: firebrick; }
+pre.json .boolean, code .boolean { color: blue; }
+pre.json .null, code .null { color: magenta; }
+pre.json .key, code .key { color: #444; }

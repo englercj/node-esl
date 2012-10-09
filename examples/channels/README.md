@@ -1,43 +1,16 @@
-## Chatty
+## Channels
 
-Chatty is a simple application to test FreeSWITCH SMS and ESL capabilities. It presents
-a real-time webchat with a cell phone via text messages.
+This is a web application that will display real-time updates of FreeSWITCH Channels. It demonstrates
+multiple methods of maintaining a FreeSWITCH Channel list using the modesl library.
 
-![Can't Talk][1]
+![Change Channel][1]
 
 ### Installation
 
-#### Configure FreeSWITCH
-
-First you need to install and configure `mod_sms`. You can find instructions for this on
-the [Mod SMS](http://wiki.freeswitch.org/wiki/Mod_sms) Wiki Page.
-
-You will also need to ensure that your chatplan includes the `<action application="fire" data=""/>`
-directive so that SIP `MESSAGE`s are broadcasted to the Event Sockets.
-
-Here is an example `conf/chatplan/default.xml`
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<include>
-  <context name="default">
-
-    <extension name="demo">
-      <condition field="to" expression="^(.*)$">
-	<action application="fire" data=""/>
-      </condition>
-    </extension>
-
-  </context>
-</include>
-```
-
-#### Install Chatty
-
-simply run npm install from within the `examples/chatty` directory
+simply run npm install from within the `examples/channels` directory
 
 ```shell
-cd examples/chatty
+cd examples/channels
 npm install
 ```
 
@@ -46,12 +19,16 @@ npm install
 To start the server, run the executable:
 
 ```shell
-cd examples/chatty
-./bin/chatty
+cd examples/channels
+./bin/channels
 ```
 
 Then navigate your browser to `http://server:8181`. If you have you config.json configured
-properly then you should be able to send and receive SMS messages from the web interface.
+properly then you should be able to see a list of the channels in use on FreeSWITCH. If you
+do not run `show channels` from `fs_cli` and ensure that there are channels in use.
 
+The 3 different methods of getting at the information from FreeSWITCH are documented on the
+actual page. You can also live switch between each method, and view the number of events and
+the amount of data each sends in your web console.
 
-[1]: http://www.stuffistumbledupon.com/wp-content/uploads/2012/04/Rabbit-Meme-Playing-PS3-Videogames-cant-talk-now-boss-fight-lol-lulz-funny-joke-pictures-animals.jpg
+[1]: http://cdn.memegenerator.net/instances/400x/27272674.jpg

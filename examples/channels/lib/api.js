@@ -263,7 +263,7 @@ Api.prototype._createNewChannel = function(e) {
 	write_rate: '', //in CHANNEL_CALLSTATE
 	write_bit_rate: '', //in CHANNEL_CALLSTATE
 	secure: null, //Not in messages
-	hostname: e.getHeader('FreeSIWTCH-Hostname'),
+	hostname: e.getHeader('FreeSWITCH-Hostname'),
 	presence_id: null, //Not in messages
 	presence_data: null, //Not in messages
 	callstate: '', //in CHANNEL_CALLSTATE

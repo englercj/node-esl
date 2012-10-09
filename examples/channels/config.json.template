@@ -1,0 +1,12 @@
+{
+    "fsw": {
+	"host": "127.0.0.1",
+	"port": 8021,
+	"password": "ClueCon"
+    },
+    "server": {
+	"host": "0.0.0.0",
+	"port": 8181
+    },
+    "sioLogLevel": 1
+}

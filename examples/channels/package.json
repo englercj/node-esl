@@ -1,0 +1,22 @@
+{
+    "name": "channels",
+    "version": "0.0.1",
+    "description": "Web page that dispalys the Channels in use in Real-Time",
+    "author": "Chad Engler <Chad.Engler@patlive.com>",
+    "homepage": "https://github.com/englercj/node-esl",
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/englercj/node-esl.git"
+    },
+    "dependencies": {
+	"modesl": "0.x",
+	"express": "3.x",
+	"socket.io": "0.9.x",
+	"eyes": "*",
+	"utile": "*"
+    },
+    "engines": {
+	"node": ">=0.8.x"
+    },
+    "private": true
+}

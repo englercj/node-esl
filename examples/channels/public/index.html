@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live FSW Channels</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/dot-luv/jquery-ui.css" />
+
+    <!-- JS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/app.js"></script>
+  </head>
+  <body>
+    <div id="actions-explain">
+      <h2>Data Retreival Methods</h2>
+      <dl>
+	<dt>Poll - <a href="#poll" id="poll" class="method">Use this method</a> (default)</dt>
+	<dd>
+	  In this method the server polls FreeSWITCH for the entire channel list once per second. And
+	  then will emit that full list tot he client via websockets. This causes a full redraw of the
+	  table, and for the server to buffer the list. This method is the least efficient, but is the
+	  quickest and least complex.
+	</dd>
+
+	<dt>Live - <a href="#live" id="live" class="method">Use this method</a></dt>
+	<dd>
+	  In this method the server listens to ESL events and sends row updates to the client,
+	  unfortunately this will not detect channels that existed before you started listening. Only
+	  channels that are created after listening are displayed. The benefit is that the server does not
+	  have to buffer a channel list, and the client only has to update rows that change. Unfortunately
+	  it increases complexity and introduces a problem where a message can be missed and the client
+	  can be out of date. Note: Although this method requires no server buffer, this implementation
+	  does buffer a channel list based on events from this method. However, to simulate an unbuffered
+	  server if you switch to this method, the entire list is not sent down as a refresh.
+	</dd>
+
+	<dt>Hybrid - <a href="#hybrid" id="hybrid" class="method">Use this method</a></dt>
+	<dd>
+	  In this method the server tries to combine both. It initially fills a buffers a full channel list
+	  from FreeSWITCH using "show channels as json". Then, it subscribes to events for new events. When
+	  the websocket initially connects it gets a full list of the buffer, then as events come in it is
+	  notified of changes to rows. In this way you get the benefits of both: lightweight messaging, but
+	  access tot he full list.
+    </div>
+    <div id="message"></div>
+
+    <h2>FreeSWITCH Channels</h2>
+    <table id="channels">
+      <thead>
+	<tr>
+	  <th>Uuid</th>
+	  <th>Direction</th>
+	  <th>Created</th>
+	  <th>Channel</th>
+	  <th>State</th>
+	  <th>CallState</th>
+	  <th>Caller Id</th>
+	  <th>Application</th>
+	  <th>Read Codec</th>
+	  <th>Write Codec</th>
+	  <th>Host</th>
+	  <th>Call Uuid</th>
+	</tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -135,6 +135,8 @@
 	}
 	//row exists, update it
 	else {
+	    $row.data('obj', row);
+
 	    $row.find('.direction').text(row.direction);
 	    $row.find('.created').text(row.created);
 	    $row.find('.name').text(row.name);

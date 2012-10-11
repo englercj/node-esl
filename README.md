@@ -67,7 +67,8 @@ npm test
   * ~~SMS Messaging~~
   * IVR App
   * Faxing App
-  * fs_cli clone
+  * ~~fs_cli clone~~
+  * ~~Live updating channels list~~
  - Add more abstraction/sugar functions
  - ~~Build out the Wiki and trim down the README~~
  - ~~Add LICENSE file~~

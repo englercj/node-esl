@@ -15,14 +15,10 @@ vows.describe('esl.Parser').addBatch({
 	    assert.isFunction(Parser);
 	},
 	'parse': {
-	    topic: macros.getEchoServerSocket(function(o) {
-		o.parser = new Parser(o.socket);
-		this.callback(null, o);
-	    }),
-	    'normal': macros.parseEvent(data.stream.normal, heads),
-	    'plain': macros.parseEvent(data.stream.plain, heads),
-	    'json': macros.parseEvent(data.stream.json, heads),
-	    'xml': macros.parseEvent(data.stream.xml, heads)
+	    'normal': macros.testEvent(data.stream.normal, heads, Parser),
+	    'plain': macros.testEvent(data.stream.plain, heads, Parser),
+	    'json': macros.testEvent(data.stream.json, heads, Parser),
+	    'xml': macros.testEvent(data.stream.xml, heads, Parser)
 	}
     }
 }).export(module);

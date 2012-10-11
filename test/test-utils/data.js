@@ -85,7 +85,13 @@ var data = {
             '  </headers>',
             '  <body>Hello from Chad Engler!</body>',
             '</event>'
-        ].join('\n')
+        ].join('\n'),
+	badJson: [
+	    '{ herp: derp }'
+	].join('\n'),
+	badXml: [
+	    '<herp|"derp<//>>'
+	].join('\n')
     }
 };
 

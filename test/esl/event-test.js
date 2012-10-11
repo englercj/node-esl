@@ -254,6 +254,26 @@ vows.describe('esl.Event').addBatch({
             }
         },
         '.nextHeader() should': {
+	    'return null if no firstHeader() call yet': function() {
+                var e = new Event(heads);
+
+		assert.isNull(e.hPtr);
+		assert.isNull(e.nextHeader());
+	    },
+	    'return null if at the end of Headers': function() {
+		var e = new Event(heads), len = Object.keys(heads).length - 1; //dont count _body
+
+		//init ptr
+		e.firstHeader();
+
+		//go through each header
+		for(var i = 0; i <= len; ++i) {
+		    e.nextHeader();
+		}
+
+		//should now be at end
+		assert.isNull(e.nextHeader());
+	    },
             'move ptr to next header and return its key': function() {
                 var e = new Event(heads), key;
 

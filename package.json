@@ -21,7 +21,7 @@
 	"portfinder": "0.2.x"
     },
     "scripts": {
-	"test": "vows --spec --isolate"
+	"test": "vows --spec"
     },
     "engines": {
 	"node": ">=0.6.x"

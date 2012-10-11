@@ -62,7 +62,10 @@ npm test
 
 ### TODO
 
- - Add tests for `esl.Connection`, `esl.Parser`, and `esl.Server`
+ - Add tests for 
+  * `esl.Connection`
+  * ~~`esl.Parser`~~
+  * `esl.Server`
  - Add more examples for
   * ~~SMS Messaging~~
   * IVR App

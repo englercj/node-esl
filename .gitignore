@@ -2,4 +2,6 @@
 \#*#
 nbproject/
 node_modules/
+lib-cov/
+coverage.*
 config.json

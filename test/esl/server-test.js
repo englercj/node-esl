@@ -34,10 +34,27 @@ vows.describe('esl.Server').addBatch({
 	    assert.isFunction(s._generateId);
 
 	    //var defaults
-	    assert.isFunction(s.readyCb);
 	    assert.isObject(s.connections);
 	    assert.isNumber(s.port);
 	    assert.strictEqual(s.host, '127.0.0.1');
+	},
+	'emit': {
+	    topic: function(s) { return s; },
+	    'connection::open': macros.testServerConnectionEvent('connection::open'),
+	    'connection::ready': macros.testServerConnectionEvent('connection::ready', data.event.channelData),
+	    'connection::close': macros.testServerConnectionEvent('connection::close')
+	},
+	'use': {
+	    topic: macros.getEchoServerSocket(function(o) {
+		var t = this;
+
+		o.eslServer = new Server({ server: o.server }, function() {
+		    t.callback(null, o);
+		});
+	    }),
+	    'custom server instance': function(o) {
+		assert.equal(o.server, o.eslServer.server);
+	    }
 	}
     }
 }).export(module);

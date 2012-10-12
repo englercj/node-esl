@@ -3,6 +3,47 @@ portfinder = require('portfinder'),
 net = require('net');
 
 var macros = module.exports = {
+    //macro to setup a test for a esl.Server event
+    testServerConnectionEvent: function(event, channelData) {
+	return {
+	    topic: function(s) {
+		var t = this, to;
+
+		//setup event callback
+		s.once(event, function(c, id) {
+		    clearTimeout(to);
+
+		    t.callback(c, id);
+		});
+
+		//setup timeout
+		to = setTimeout(function() {
+		    t.callback(new Error("Connection Timeout"));
+		}, 1500);
+
+		//create a connection
+		var socket = net.connect({ port: s.port });
+
+		if(channelData) {
+		    //when esl.Connection sends 'connect' event
+		    socket.on('data', function(data) {
+			if(data.toString().indexOf('connect') !== -1) {
+			    //write channel data to it
+			    socket.write(channelData + '\n');
+			    
+			    //wait a tick and close
+			    process.nextTick(function() {
+				socket.end();
+			    });
+			}
+		    });
+		}
+	    },
+	    'on connection': function(conn, id) {
+		assert.isFalse(conn instanceof Error, 'Should not timeout.');
+	    }
+	};
+    },
     //wrapper to test sync and async events
     testEvent: function(data, heads, Parser) {
 	return {

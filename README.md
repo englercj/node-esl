@@ -64,19 +64,10 @@ npm test
 
  - Add tests for 
   * `esl.Connection`
-  * ~~`esl.Parser`~~
-  * `esl.Server`
  - Add more examples for
-  * ~~SMS Messaging~~
   * IVR App
   * Faxing App
-  * ~~fs_cli clone~~
-  * ~~Live updating channels list~~
  - Add more abstraction/sugar functions
- - ~~Build out the Wiki and trim down the README~~
- - ~~Add LICENSE file~~
- - ~~Implement the logging of `log/data` events~~
- - ~~Implement `bgapi`'s `jobid` parameter~~
  - Better error messages on `error` event
 
 ### License

@@ -3,6 +3,22 @@ portfinder = require('portfinder'),
 net = require('net');
 
 var macros = module.exports = {
+    testConnSend: function(args, expected, Connection) {
+	return {
+            topic: macros.getInboundConnection(Connection, function(o) {
+		var t = this;
+                o.conn.socket.once('data', function(data) {
+                    t.callback(o, data);
+                });
+
+                o.conn.send.apply(o.conn, args);//('send me', { header1: 'val1', header2: 'val2' });
+            }),
+            'writes correct data': function(o, data) {
+                assert.equal(data, expected);//'send me\nheader1: val1\nheader2: val2\n\n');
+		o.conn.socket.end();
+            }
+	};
+    },
     //macro to setup a test for a esl.Server event
     testServerConnectionEvent: function(event, channelData) {
 	return {
@@ -144,10 +160,18 @@ var macros = module.exports = {
 		o.server.listen(port, '127.0.0.1', function() {
 		    //create a client socket to the server
 		    o.socket = net.connect({ port: port }, function() {
-			cb.call(t, o);
+			if(cb) cb.call(t, o);
 		    });
 		});
 	    });
 	};
+    },
+    getInboundConnection: function(Conn, cb) {
+	return macros.getEchoServerSocket(function(o) {
+            var t = this;
+            o.conn = new Conn('localhost', o.port, 'ClueCon');
+
+	    if(cb) cb.call(t, o);
+	});
     }
 };

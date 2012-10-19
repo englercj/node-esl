@@ -144,7 +144,14 @@ var data = {
 	    'Event-Name: CHANNEL_DATA',
 	    'Control: full',
 	    ''
-	].join('\n')
+	].join('\n'),
+	cmdReply: function(msg, err) {
+	    return [
+		'Content-Type: command/reply',
+		'Reply-Text: ' + (err ? '-ERR ' : '+OK ') + (msg || 'accepted'),
+		''
+	    ].join('\n');
+	}
     }
 };
 

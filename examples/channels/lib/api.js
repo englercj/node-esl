@@ -37,14 +37,23 @@ Api.prototype._init = function() {
 
     //connect to freeswitch
     self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
-	//listen on API ports
-	self.server = self.app.listen(self.config.server.port, self.config.server.host);
-	self.io = sio.listen(self.server);
+	self.fsw.subscribe([
+	    'CHANNEL_CREATE',
+	    'CHANNEL_CALLSTATE',
+	    'CHANNEL_STATE',
+	    'CHANNEL_EXECUTE',
+	    'CHANNEL_EXECUTE_COMPLETE',
+	    'CHANNEL_DESTROY'
+	], function() {
+	    //listen on API ports
+	    self.server = self.app.listen(self.config.server.port, self.config.server.host);
+	    self.io = sio.listen(self.server);
 
-	//configure, and setup routes
-	self._configure();
-	self._setupRoutes();
-	self._setupBuffers();
+	    //configure, and setup routes
+	    self._configure();
+	    self._setupRoutes();
+	    self._setupBuffers();
+	});
     });
 
     //setup FSW Listeners

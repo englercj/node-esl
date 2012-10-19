@@ -10,7 +10,12 @@ var Cli = exports.Cli = function(args, rdyCb) {
     });
 
     this.router = new director.cli.Router().configure({ notfound: this._onNotFound.bind(this) });
-    this.conn = new esl.Connection(args.host, args.port, args.password, rdyCb);
+    var conn = this.conn = new esl.Connection(args.host, args.port, args.password, function(evt) {
+	//subscribe to all events
+	conn.subscribe(function() {
+	    if(rdyCb) rdyCb(evt);
+	});
+    });
 
     for(var i = 0, len = Cli.commands.length; i < len; ++i) {
 	var cmd = Cli.commands[i];

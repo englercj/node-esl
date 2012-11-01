@@ -5,16 +5,16 @@
     "author": "Chad Engler <Chad.Engler@patlive.com>",
     "homepage": "https://github.com/englercj/node-esl",
     "repository": {
-	"type": "git",
-	"url": "https://github.com/englercj/node-esl.git"
+        "type": "git",
+        "url": "https://github.com/englercj/node-esl.git"
     },
     "dependencies": {
-	"modesl": "0.x",
-	"express": "3.x",
-	"socket.io": "0.9.x"
+        "modesl": "0.x",
+        "express": "3.x",
+        "socket.io": "0.9.x"
     },
     "engines": {
-	"node": ">=0.8.x"
+        "node": ">=0.8.x"
     },
     "private": true
 }

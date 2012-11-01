@@ -5,8 +5,8 @@ var esl = require('modesl'),
 conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
     //send the status api command
     conn.api('status', function(res) {
-	//log result body and exit
+        //log result body and exit
         console.log(res.getBody());
-	process.exit(0);
+        process.exit(0);
     });
 });

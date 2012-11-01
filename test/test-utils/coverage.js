@@ -6,7 +6,7 @@ var covererageOn = process.argv.some(function(arg) {
 if (covererageOn) {
     exports.require = function(path) {
         var instrumentedPath = path.replace('/lib', '/lib-cov');
-	
+
         try {
             require.resolve(instrumentedPath);
             return require(instrumentedPath);

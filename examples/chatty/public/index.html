@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Chatty</title>
+    <head>
+        <title>Chatty</title>
 
-    <!-- Meta -->
-    <meta charset="utf-8" />
+        <!-- Meta -->
+        <meta charset="utf-8" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/dot-luv/jquery-ui.css" />
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/dot-luv/jquery-ui.css" />
 
-    <!-- JS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/app.js"></script>
-  </head>
-  <body>
-    <div id="num">
-      <fieldset>
-	<legend>Number</legend>
-	
-	( <input id="areacode" class="num" type="text" size="3" maxlength="3" /> )
-	<input id="phnum1" class="num" type="text" size="3" maxlength="3" /> -
-	<input id="phnum2" class="num" type="text" size="4" maxlength="4" />
-      </fieldset>
-      
-      <button id="btnConnect">Open Chat</button>
-    </div>
+        <!-- JS -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/app.js"></script>
+    </head>
+    <body>
+        <div id="num">
+            <fieldset>
+                <legend>Number</legend>
 
-    <div id="chat">
-      <div id="messages">
+                ( <input id="areacode" class="num" type="text" size="3" maxlength="3" /> )
+                <input id="phnum1" class="num" type="text" size="3" maxlength="3" /> -
+                <input id="phnum2" class="num" type="text" size="4" maxlength="4" />
+            </fieldset>
 
-      </div>
-      <input id="msgtxt" type="text" />
-      <button id="btnSend">Send</button>
-    </div>
-  </body>
+            <button id="btnConnect">Open Chat</button>
+        </div>
+
+        <div id="chat">
+            <div id="messages">
+
+            </div>
+            <input id="msgtxt" type="text" />
+            <button id="btnSend">Send</button>
+        </div>
+    </body>
 </html>

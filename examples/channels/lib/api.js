@@ -16,13 +16,13 @@ var Api = exports.Api = function(conf) {
     this.hybridBuffer = {};
 
     this.timing = {
-	poll: { last: 0, times: [], maxTimes: 120, average: 0 },
+        poll: { last: 0, times: [], maxTimes: 120, average: 0 },
     };
 
     this.clients = {
-	poll: {},
-	live: {},
-	hybrid: {}
+        poll: {},
+        live: {},
+        hybrid: {}
     };
 };
 
@@ -37,32 +37,32 @@ Api.prototype._init = function() {
 
     //connect to freeswitch
     self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
-	self.fsw.subscribe([
-	    'CHANNEL_CREATE',
-	    'CHANNEL_CALLSTATE',
-	    'CHANNEL_STATE',
-	    'CHANNEL_EXECUTE',
-	    'CHANNEL_EXECUTE_COMPLETE',
-	    'CHANNEL_DESTROY'
-	], function() {
-	    //listen on API ports
-	    self.server = self.app.listen(self.config.server.port, self.config.server.host);
-	    self.io = sio.listen(self.server);
+        self.fsw.subscribe([
+            'CHANNEL_CREATE',
+            'CHANNEL_CALLSTATE',
+            'CHANNEL_STATE',
+            'CHANNEL_EXECUTE',
+            'CHANNEL_EXECUTE_COMPLETE',
+            'CHANNEL_DESTROY'
+        ], function() {
+            //listen on API ports
+            self.server = self.app.listen(self.config.server.port, self.config.server.host);
+            self.io = sio.listen(self.server);
 
-	    //configure, and setup routes
-	    self._configure();
-	    self._setupRoutes();
-	    self._setupBuffers();
-	});
+            //configure, and setup routes
+            self._configure();
+            self._setupRoutes();
+            self._setupBuffers();
+        });
     });
 
     //setup FSW Listeners
     if(self.config.debug) {
-	self.fsw.on('esl::event::**', function(e) {
-	    if(e.type.indexOf('CHANNEL') === -1) return;
+        self.fsw.on('esl::event::**', function(e) {
+            if(e.type.indexOf('CHANNEL') === -1) return;
 
-	    eyes.inspect(e, 'Event: ' + e.getHeader('Event-Name'));
-	});
+            eyes.inspect(e, 'Event: ' + e.getHeader('Event-Name'));
+        });
     }
 };
 
@@ -80,47 +80,47 @@ Api.prototype._setupRoutes = function() {
 
     //Socket.io Events
     self.io.on('connection', function(socket) {
-	socket.on('setup', function(method, cb) {
-	    socket.set('method', method, function() {
-		self._setClientMethod(socket, method);
+        socket.on('setup', function(method, cb) {
+            socket.set('method', method, function() {
+                self._setClientMethod(socket, method);
 
-		//refresh hybrid
-		if(method == 'hybrid') {
-		    self._emitToClients({ uuid: null, data: self.hybridBuffer }, self.clients.hybrid);
-		}
+                //refresh hybrid
+                if(method == 'hybrid') {
+                    self._emitToClients({ uuid: null, data: self.hybridBuffer }, self.clients.hybrid);
+                }
 
-		if(cb) cb();
-	    });
-	});
+                if(cb) cb();
+            });
+        });
 
-	socket.on('change-method', function(method, cb) {
-	    socket.set('method', method, function() {
-		self._setClientMethod(socket, method);
+        socket.on('change-method', function(method, cb) {
+            socket.set('method', method, function() {
+                self._setClientMethod(socket, method);
 
-		//refresh hybrid
-		if(method == 'hybrid') {
-		    self._emitToClients({ uuid: null, data: self.hybridBuffer }, self.clients.hybrid);
-		}
+                //refresh hybrid
+                if(method == 'hybrid') {
+                    self._emitToClients({ uuid: null, data: self.hybridBuffer }, self.clients.hybrid);
+                }
 
-		if(cb) cb();
-	    });
-	});
+                if(cb) cb();
+            });
+        });
 
-	socket.on('get-data', function(cb) {
-	    socket.get('method', function(err, method) {
-		if(cb) {
-		    cb(null, self[method + 'Buffer']);
-		}
-	    });
-	});
+        socket.on('get-data', function(cb) {
+            socket.get('method', function(err, method) {
+                if(cb) {
+                    cb(null, self[method + 'Buffer']);
+                }
+            });
+        });
 
-	socket.on('get-stats', function(cb) {
-	    if(cb) cb(null, self.timing);
-	});
+        socket.on('get-stats', function(cb) {
+            if(cb) cb(null, self.timing);
+        });
 
-	socket.on('disconnect', function() {
-	    self._unsetClientMethod(socket);
-	});
+        socket.on('disconnect', function() {
+            self._unsetClientMethod(socket);
+        });
     });
 };
 
@@ -134,16 +134,16 @@ Api.prototype._setupBuffers = function() {
     //hybrid gets a full show to start, then subscribes to live updates
     var self = this;
     self.fsw.show('channels', 'xml', function(err, data) {
-	//update buffer, massage the array into an object
-	//so they are keyed by uuid instead of indexes
-	self.hybridBuffer.row_count = data.row_count;
-	self.hybridBuffer.rows = {};
-	data.rows.forEach(function(row) {
-	    self.hybridBuffer.rows[row.uuid] = row;
-	});
+        //update buffer, massage the array into an object
+        //so they are keyed by uuid instead of indexes
+        self.hybridBuffer.row_count = data.row_count;
+        self.hybridBuffer.rows = {};
+        data.rows.forEach(function(row) {
+            self.hybridBuffer.rows[row.uuid] = row;
+        });
 
-	self._subLiveUpdates(self.hybridBuffer, self.clients.hybrid);
-	self._emitToClients({ uuid: null, data: self.hybridBuffer }, self.clients.hybrid);
+        self._subLiveUpdates(self.hybridBuffer, self.clients.hybrid);
+        self._emitToClients({ uuid: null, data: self.hybridBuffer }, self.clients.hybrid);
     });
 };
 
@@ -164,7 +164,7 @@ Api.prototype._emitToClients = function(data, clients) {
 
     //object like { 'socket_id': socket }
     utile.each(clients, function(socket) {
-	socket.emit('data', data);
+        socket.emit('data', data);
     });
 };
 
@@ -174,59 +174,59 @@ Api.prototype._subLiveUpdates = function(buffer, clients) {
     //subscribe to the live Channel events, and emit
     //each event's data to the client
     self.fsw.on('esl::event::CHANNEL_CREATE::*', function(evt) {
-	var id = evt.getHeader('Unique-ID');
+        var id = evt.getHeader('Unique-ID');
 
-	buffer.row_count++;
-	buffer.rows[id] = self._createNewChannel(evt);
+        buffer.row_count++;
+        buffer.rows[id] = self._createNewChannel(evt);
 
-	self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
+        self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
     });
 
     self.fsw.on('esl::event::CHANNEL_CALLSTATE::*', function(evt) {
-	var id = evt.getHeader('Unique-ID');
+        var id = evt.getHeader('Unique-ID');
 
-	//can be called after being destroyed
-	if(buffer.rows[id]) {
-	    self._updateCallState(buffer, evt, id);
-	    self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
-	}
+        //can be called after being destroyed
+        if(buffer.rows[id]) {
+            self._updateCallState(buffer, evt, id);
+            self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
+        }
     });
 
     self.fsw.on('esl::event::CHANNEL_STATE::*', function(evt) {
-	var id = evt.getHeader('Unique-ID');
+        var id = evt.getHeader('Unique-ID');
 
-	if(buffer.rows[id]) {
-	    self._updateState(buffer, evt, id);
-	    self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
-	}
+        if(buffer.rows[id]) {
+            self._updateState(buffer, evt, id);
+            self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
+        }
     });
 
     self.fsw.on('esl::event::CHANNEL_EXECUTE::*', function(evt) {
-	var id = evt.getHeader('Unique-ID');
+        var id = evt.getHeader('Unique-ID');
 
-	if(buffer.rows[id]) {
-	    buffer.rows[id].application = evt.getHeader('Application');
-	    buffer.rows[id].application_data = evt.getHeader('Application-Data');
-	    self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
-	}
+        if(buffer.rows[id]) {
+            buffer.rows[id].application = evt.getHeader('Application');
+            buffer.rows[id].application_data = evt.getHeader('Application-Data');
+            self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
+        }
     });
 
     self.fsw.on('esl::event::CHANNEL_EXECUTE_COMPLETE::*', function(evt) {
-	var id = evt.getHeader('Unique-ID');
+        var id = evt.getHeader('Unique-ID');
 
-	if(buffer.rows[id]) {
-	    buffer.rows[id].application_response = evt.getHeader('Application-Response');
-	    self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
-	}
+        if(buffer.rows[id]) {
+            buffer.rows[id].application_response = evt.getHeader('Application-Response');
+            self._emitToClients({ uuid: id, data: buffer.rows[id] }, clients);
+        }
     });
 
     self.fsw.on('esl::event::CHANNEL_DESTROY::*', function(evt) {
-	var id = evt.getHeader('Unique-ID');
+        var id = evt.getHeader('Unique-ID');
 
-	buffer.row_count--;
-	delete buffer.rows[id];
-	
-	self._emitToClients({ uuid: id, destroy: true }, clients);
+        buffer.row_count--;
+        delete buffer.rows[id];
+        
+        self._emitToClients({ uuid: id, destroy: true }, clients);
     });
 };
 
@@ -251,37 +251,37 @@ Api.prototype._updateCallState = function(buff, e, id) {
 
 Api.prototype._createNewChannel = function(e) {
     return {
-	uuid: e.getHeader('Unique-ID'),
-	direction: e.getHeader('Call-Direction'),
-	created: e.getHeader('Event-Date-Local'),
-	created_epoch: Math.floor(e.getHeader('Event-Date-Timestamp') / 1E6),
-	name: e.getHeader('Channel-Name'),
-	state: e.getHeader('Channel-State'),
-	cid_name: e.getHeader('Caller-Callee-ID-Name') || e.getHeader('Caller-Caller-ID-Name'),
-	cid_num: e.getHeader('Caller-Callee-ID-Number') || e.getHeader('Caller-Caller-ID-Number'),
-	ip_addr: '',
-	dest: e.getHeader('Caller-Destination-Number'),
-	application: '', //in CHANNEL_EXECUTE
-	application_data: '', //in CHANNEL_EXECUTE
-	dialplan: null, //Not in messages
-	context: e.getHeader('Caller-Context'),
-	read_codec: '', //in CHANNEL_CALLSTATE
-	read_rate: '', //in CHANNEL_CALLSTATE
-	read_bit_rate: '', //in CHANNEL_CALLSTATE
-	write_codec: '', //in CHANNEL_CALLSTATE
-	write_rate: '', //in CHANNEL_CALLSTATE
-	write_bit_rate: '', //in CHANNEL_CALLSTATE
-	secure: null, //Not in messages
-	hostname: e.getHeader('FreeSWITCH-Hostname'),
-	presence_id: null, //Not in messages
-	presence_data: null, //Not in messages
-	callstate: '', //in CHANNEL_CALLSTATE
-	callee_name: e.getHeader('Caller-Callee-ID-Name'),
-	callee_num: e.getHeader('Caller-Callee-ID-Number'),
-	callee_direction: null, //Not in messages
-	call_uuid: e.getHeader('Channel-Call-UUID'),
-	sent_callee_name: null, //Not in messages
-	sent_callee_num: null //Not in messages
+        uuid: e.getHeader('Unique-ID'),
+        direction: e.getHeader('Call-Direction'),
+        created: e.getHeader('Event-Date-Local'),
+        created_epoch: Math.floor(e.getHeader('Event-Date-Timestamp') / 1E6),
+        name: e.getHeader('Channel-Name'),
+        state: e.getHeader('Channel-State'),
+        cid_name: e.getHeader('Caller-Callee-ID-Name') || e.getHeader('Caller-Caller-ID-Name'),
+        cid_num: e.getHeader('Caller-Callee-ID-Number') || e.getHeader('Caller-Caller-ID-Number'),
+        ip_addr: '',
+        dest: e.getHeader('Caller-Destination-Number'),
+        application: '', //in CHANNEL_EXECUTE
+        application_data: '', //in CHANNEL_EXECUTE
+        dialplan: null, //Not in messages
+        context: e.getHeader('Caller-Context'),
+        read_codec: '', //in CHANNEL_CALLSTATE
+        read_rate: '', //in CHANNEL_CALLSTATE
+        read_bit_rate: '', //in CHANNEL_CALLSTATE
+        write_codec: '', //in CHANNEL_CALLSTATE
+        write_rate: '', //in CHANNEL_CALLSTATE
+        write_bit_rate: '', //in CHANNEL_CALLSTATE
+        secure: null, //Not in messages
+        hostname: e.getHeader('FreeSWITCH-Hostname'),
+        presence_id: null, //Not in messages
+        presence_data: null, //Not in messages
+        callstate: '', //in CHANNEL_CALLSTATE
+        callee_name: e.getHeader('Caller-Callee-ID-Name'),
+        callee_num: e.getHeader('Caller-Callee-ID-Number'),
+        callee_direction: null, //Not in messages
+        call_uuid: e.getHeader('Channel-Call-UUID'),
+        sent_callee_name: null, //Not in messages
+        sent_callee_num: null //Not in messages
     };
 };
 
@@ -292,37 +292,37 @@ Api.prototype._doShowPoll = function() {
     poll.last = Date.now();
 
     self.fsw.show('channels', 'xml', function(err, data, raw) {
-	//capture end time for calculations later
-	var end = Date.now();
+        //capture end time for calculations later
+        var end = Date.now();
 
-	if(err) {
-	    console.log(err);
-	    return;
-	}
+        if(err) {
+            console.log(err);
+            return;
+        }
 
-	//update buffer, massage the array into an object
-	//so they are keyed by uuid instead of indexes
-	self.pollBuffer.row_count = data.row_count;
-	self.pollBuffer.rows = {};
-	data.rows.forEach(function(row) {
-	    self.pollBuffer.rows[row.uuid] = row;
-	});
+        //update buffer, massage the array into an object
+        //so they are keyed by uuid instead of indexes
+        self.pollBuffer.row_count = data.row_count;
+        self.pollBuffer.rows = {};
+        data.rows.forEach(function(row) {
+            self.pollBuffer.rows[row.uuid] = row;
+        });
 
-	//emit the data to the client
-	self._emitToClients({ uuid: null, data: self.pollBuffer }, self.clients.poll);
+        //emit the data to the client
+        self._emitToClients({ uuid: null, data: self.pollBuffer }, self.clients.poll);
 
-	//calculate timings
-	poll.times.push(end - poll.last);
+        //calculate timings
+        poll.times.push(end - poll.last);
 
-	if(poll.times.length > poll.maxTimes)
-	    poll.times.shift();
+        if(poll.times.length > poll.maxTimes)
+            poll.times.shift();
 
-	poll.average = poll.times.reduce(function(p, c) { return p + c; }, 0) / poll.times.length;
+        poll.average = poll.times.reduce(function(p, c) { return p + c; }, 0) / poll.times.length;
 
-	//set wait time for next channel grab, getting as close to a 
-	//one second interval as we can
-	var waitDiff = 1000 - poll.times[poll.times.length - 1];
+        //set wait time for next channel grab, getting as close to a 
+        //one second interval as we can
+        var waitDiff = 1000 - poll.times[poll.times.length - 1];
 
-	setTimeout(self._doShowPoll.bind(self), (waitDiff > 0 ? waitDiff : 1));
+        setTimeout(self._doShowPoll.bind(self), (waitDiff > 0 ? waitDiff : 1));
     });
 };

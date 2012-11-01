@@ -133,52 +133,52 @@ vows.describe('esl.Connection').addBatch({
                 assert.isNull(o.conn.getInfo());
             },
             '.send()': {
-		//for some reason if I don't specify a topic here,
-		//it doesn't execute the second async test
-		topic: function(o) { return null; },
+                //for some reason if I don't specify a topic here,
+                //it doesn't execute the second async test
+                topic: function(o) { return null; },
                 'with args': macros.testConnSend(
-		    ['send me', { header1: 'val1', header2: 'val2' }],
-		    'send me\nheader1: val1\nheader2: val2\n\n',
-		    Connection
-		),
-		'without args': macros.testConnSend(['send me'], 'send me\n\n', Connection)
+                    ['send me', { header1: 'val1', header2: 'val2' }],
+                    'send me\nheader1: val1\nheader2: val2\n\n',
+                    Connection
+                ),
+                'without args': macros.testConnSend(['send me'], 'send me\n\n', Connection)
             }/*,
-	    '.sendRecv()': {
-		topic: function() { return null; },
-		'should call callback': {
-		    topic: macros.getInboundConnection(Connection, function(o) {
-			var t = this;
-			o.conn.sendRecv('auth poopy', function(evt) {
-			    t.callback(o, evt);
-			});
+            '.sendRecv()': {
+                topic: function() { return null; },
+                'should call callback': {
+                    topic: macros.getInboundConnection(Connection, function(o) {
+                        var t = this;
+                        o.conn.sendRecv('auth poopy', function(evt) {
+                            t.callback(o, evt);
+                        });
 
-			o.conn.socket.once('data', function() {
-			    o.conn.socket.write(data.event.cmdReply('accepted'));
-			});
-		    }),
-		    'on command': function(o, evt) {
-			assert.equal(evt.getHeader('Reply-Text'), '+OK accepted');
-			assert.equal(evt.getHeader('Modesl-Reply-OK'), 'accepted');
-		    }
-		},
-		'should fire esl::event::command::reply': {
-		    topic: macros.getInboundConnection(Connection, function(o) {
-			var t = this;
-			o.conn.sendRecv('auth poopy');
-			o.conn.socket.once('data', function() {
-			    o.conn.socket.write(data.event.cmdReply('accepted'));
-			});
+                        o.conn.socket.once('data', function() {
+                            o.conn.socket.write(data.event.cmdReply('accepted'));
+                        });
+                    }),
+                    'on command': function(o, evt) {
+                        assert.equal(evt.getHeader('Reply-Text'), '+OK accepted');
+                        assert.equal(evt.getHeader('Modesl-Reply-OK'), 'accepted');
+                    }
+                },
+                'should fire esl::event::command::reply': {
+                    topic: macros.getInboundConnection(Connection, function(o) {
+                        var t = this;
+                        o.conn.sendRecv('auth poopy');
+                        o.conn.socket.once('data', function() {
+                            o.conn.socket.write(data.event.cmdReply('accepted'));
+                        });
 
-			o.conn.on('esl::event::command::reply', function(evt) {
-			    t.callback(o, evt);
-			});
-		    }),
-		    'on command': function(o, evt) {
-			assert.equal(evt.getHeader('Reply-Text'), '+OK accepted');
-			assert.equal(evt.getHeader('Modesl-Reply-OK'), 'accepted');
-		    }
-		}
-	    }*/
+                        o.conn.on('esl::event::command::reply', function(evt) {
+                            t.callback(o, evt);
+                        });
+                    }),
+                    'on command': function(o, evt) {
+                        assert.equal(evt.getHeader('Reply-Text'), '+OK accepted');
+                        assert.equal(evt.getHeader('Modesl-Reply-OK'), 'accepted');
+                    }
+                }
+            }*/
         }
     }
 }).export(module);

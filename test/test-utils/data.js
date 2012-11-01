@@ -86,94 +86,94 @@ var data = {
             '  <body>Hello from Chad Engler!</body>',
             '</event>'
         ].join('\n'),
-	badJson: [
-	    '{ herp: derp }'
-	].join('\n'),
-	badXml: [
-	    '<herp|"derp<//>>'
-	].join('\n'),
-	channelData: [
-	    'Channel-Username: 1001',
-	    'Channel-Dialplan: XML',
-	    'Channel-Caller-ID-Name: 1001',
-	    'Channel-Caller-ID-Number: 1001',
-	    'Channel-Network-Addr: 10.0.1.241',
-	    'Channel-Destination-Number: 886',
-	    'Channel-Unique-ID: 40117b0a-186e-11dd-bbcd-7b74b6b4d31e',
-	    'Channel-Source: mod_sofia',
-	    'Channel-Context: default',
-	    'Channel-Channel-Name: sofia/default/1001%4010.0.1.100',
-	    'Channel-Profile-Index: 1',
-	    'Channel-Channel-Created-Time: 1209749769132614',
-	    'Channel-Channel-Answered-Time: 0',
-	    'Channel-Channel-Hangup-Time: 0',
-	    'Channel-Channel-Transfer-Time: 0',
-	    'Channel-Screen-Bit: yes',
-	    'Channel-Privacy-Hide-Name: no',
-	    'Channel-Privacy-Hide-Number: no',
-	    'Channel-State: CS_EXECUTE',
-	    'Channel-State-Number: 4',
-	    'Channel-Name: sofia/default/1001%4010.0.1.100',
-	    'Unique-ID: 40117b0a-186e-11dd-bbcd-7b74b6b4d31e',
-	    'Call-Direction: inbound',
-	    'Answer-State: early',
-	    'Channel-Read-Codec-Name: G722',
-	    'Channel-Read-Codec-Rate: 16000',
-	    'Channel-Write-Codec-Name: G722',
-	    'Channel-Write-Codec-Rate: 16000',
-	    'Caller-Username: 1001',
-	    'Caller-Dialplan: XML',
-	    'Caller-Caller-ID-Name: 1001',
-	    'Caller-Caller-ID-Number: 1001',
-	    'Caller-Network-Addr: 10.0.1.241',
-	    'Caller-Destination-Number: 886',
-	    'Caller-Unique-ID: 40117b0a-186e-11dd-bbcd-7b74b6b4d31e',
-	    'Caller-Source: mod_sofia',
-	    'Caller-Context: default',
-	    'Caller-Channel-Name: sofia/default/1001%4010.0.1.100',
-	    'Caller-Profile-Index: 1',
-	    'Caller-Channel-Created-Time: 1209749769132614',
-	    'Caller-Channel-Answered-Time: 0',
-	    'Caller-Channel-Hangup-Time: 0',
-	    'Caller-Channel-Transfer-Time: 0',
-	    'Caller-Screen-Bit: yes',
-	    'Caller-Privacy-Hide-Name: no',
-	    'Caller-Privacy-Hide-Number: no',
-	    'Content-Type: command/reply',
-	    'Socket-Mode: async',
-	    'Event-Name: CHANNEL_DATA',
-	    'Control: full',
-	    ''
-	].join('\n'),
-	cmdReply: function(msg, err) {
-	    return [
-		'Content-Type: command/reply',
-		'Reply-Text: ' + (err ? '-ERR ' : '+OK ') + (msg || 'accepted'),
-		''
-	    ].join('\n');
-	}
+        badJson: [
+            '{ herp: derp }'
+        ].join('\n'),
+        badXml: [
+            '<herp|"derp<//>>'
+        ].join('\n'),
+        channelData: [
+            'Channel-Username: 1001',
+            'Channel-Dialplan: XML',
+            'Channel-Caller-ID-Name: 1001',
+            'Channel-Caller-ID-Number: 1001',
+            'Channel-Network-Addr: 10.0.1.241',
+            'Channel-Destination-Number: 886',
+            'Channel-Unique-ID: 40117b0a-186e-11dd-bbcd-7b74b6b4d31e',
+            'Channel-Source: mod_sofia',
+            'Channel-Context: default',
+            'Channel-Channel-Name: sofia/default/1001%4010.0.1.100',
+            'Channel-Profile-Index: 1',
+            'Channel-Channel-Created-Time: 1209749769132614',
+            'Channel-Channel-Answered-Time: 0',
+            'Channel-Channel-Hangup-Time: 0',
+            'Channel-Channel-Transfer-Time: 0',
+            'Channel-Screen-Bit: yes',
+            'Channel-Privacy-Hide-Name: no',
+            'Channel-Privacy-Hide-Number: no',
+            'Channel-State: CS_EXECUTE',
+            'Channel-State-Number: 4',
+            'Channel-Name: sofia/default/1001%4010.0.1.100',
+            'Unique-ID: 40117b0a-186e-11dd-bbcd-7b74b6b4d31e',
+            'Call-Direction: inbound',
+            'Answer-State: early',
+            'Channel-Read-Codec-Name: G722',
+            'Channel-Read-Codec-Rate: 16000',
+            'Channel-Write-Codec-Name: G722',
+            'Channel-Write-Codec-Rate: 16000',
+            'Caller-Username: 1001',
+            'Caller-Dialplan: XML',
+            'Caller-Caller-ID-Name: 1001',
+            'Caller-Caller-ID-Number: 1001',
+            'Caller-Network-Addr: 10.0.1.241',
+            'Caller-Destination-Number: 886',
+            'Caller-Unique-ID: 40117b0a-186e-11dd-bbcd-7b74b6b4d31e',
+            'Caller-Source: mod_sofia',
+            'Caller-Context: default',
+            'Caller-Channel-Name: sofia/default/1001%4010.0.1.100',
+            'Caller-Profile-Index: 1',
+            'Caller-Channel-Created-Time: 1209749769132614',
+            'Caller-Channel-Answered-Time: 0',
+            'Caller-Channel-Hangup-Time: 0',
+            'Caller-Channel-Transfer-Time: 0',
+            'Caller-Screen-Bit: yes',
+            'Caller-Privacy-Hide-Name: no',
+            'Caller-Privacy-Hide-Number: no',
+            'Content-Type: command/reply',
+            'Socket-Mode: async',
+            'Event-Name: CHANNEL_DATA',
+            'Control: full',
+            ''
+        ].join('\n'),
+        cmdReply: function(msg, err) {
+            return [
+                'Content-Type: command/reply',
+                'Reply-Text: ' + (err ? '-ERR ' : '+OK ') + (msg || 'accepted'),
+                ''
+            ].join('\n');
+        }
     }
 };
 
 data.stream = {
     normal: data.event.plain,
     json: [
-	'Content-Type: text/event-json',
-	'Content-Length: ' + data.event.json.length,
-	'',
-	data.event.json
+        'Content-Type: text/event-json',
+        'Content-Length: ' + data.event.json.length,
+        '',
+        data.event.json
     ].join('\n'),
     plain: [
-	'Content-Type: text/event-plain',
-	'Content-Length: ' + data.event.plain.length,
-	'',
-	data.event.plain
+        'Content-Type: text/event-plain',
+        'Content-Length: ' + data.event.plain.length,
+        '',
+        data.event.plain
     ].join('\n'),
     xml: [
-	'Content-Type: text/event-xml',
-	'Content-Length: ' + data.event.xml.length,
-	'',
-	data.event.xml
+        'Content-Type: text/event-xml',
+        'Content-Length: ' + data.event.xml.length,
+        '',
+        data.event.xml
     ].join('\n')
 };
 

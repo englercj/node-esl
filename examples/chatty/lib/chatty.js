@@ -37,22 +37,22 @@ Chatty.prototype._init = function() {
     //});
 
     self.io.on('connection', function(socket) {
-	socket.on('setup', function(num, fn) {
-	    if(num.length === 10) num = '1' + num.toString();
+        socket.on('setup', function(num, fn) {
+            if(num.length === 10) num = '1' + num.toString();
 
-	    self.clients[num.toString()] = socket;
-	    socket.set('number', num.toString(), function() {
-		fn();
-	    });
-	});
+            self.clients[num.toString()] = socket;
+            socket.set('number', num.toString(), function() {
+                fn();
+            });
+        });
 
-	socket.on('sendmsg', function(msg, fn) {
-	    socket.get('number', function(err, num) {
-		self.fsw.message(num + '@' + self.provider, self.from, self.profile, msg, function(evt) {
-		    fn(evt.serialize('json'));
-		});
-	    });
-	});
+        socket.on('sendmsg', function(msg, fn) {
+            socket.get('number', function(err, num) {
+                self.fsw.message(num + '@' + self.provider, self.from, self.profile, msg, function(evt) {
+                    fn(evt.serialize('json'));
+                });
+            });
+        });
     });
 };
 
@@ -64,32 +64,32 @@ Chatty.prototype.start = function() {
 
     //connect to freeswitch
     self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
-	self.fsw.subscribe('MESSAGE', function() {
-	    self._configure();
-	    self._init();
-	});
+        self.fsw.subscribe('MESSAGE', function() {
+            self._configure();
+            self._init();
+        });
     });
 
     self.fsw.on('esl::event::**', function(evt) {
-	console.log('Event:', evt);
+        console.log('Event:', evt);
     });
 
     self.fsw.on('esl::event::MESSAGE::*', function(evt) {
-	var n = evt.getHeader('from_user'),
-	seq = parseInt(evt.getHeader('Event-Sequence'), 10);
+        var n = evt.getHeader('from_user'),
+        seq = parseInt(evt.getHeader('Event-Sequence'), 10);
 
-	//with action="fire" in the chatplan, you sometimes
-	//will get the message 2 times O.o
-	if(seq <= self.lastSeq) return;
+        //with action="fire" in the chatplan, you sometimes
+        //will get the message 2 times O.o
+        if(seq <= self.lastSeq) return;
 
-	self.lastSeq = seq;
+        self.lastSeq = seq;
 
-	if(self.clients[n]) {
-	    self.clients[n].emit('recvmsg', evt.getBody());
-	}
+        if(self.clients[n]) {
+            self.clients[n].emit('recvmsg', evt.getBody());
+        }
     });
 
     self.fsw.on('error', function(err) {
-	console.log(err);
+        console.log(err);
     });
 };

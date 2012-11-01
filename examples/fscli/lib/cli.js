@@ -4,23 +4,23 @@ esl = require('modesl');
 
 var Cli = exports.Cli = function(args, rdyCb) {
     this.rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
-	completer: this._completer.bind(this)
+        input: process.stdin,
+        output: process.stdout,
+        completer: this._completer.bind(this)
     });
 
     this.router = new director.cli.Router().configure({ notfound: this._onNotFound.bind(this) });
     var conn = this.conn = new esl.Connection(args.host, args.port, args.password, function(evt) {
-	//subscribe to all events
-	conn.subscribe(function() {
-	    if(rdyCb) rdyCb(evt);
-	});
+        //subscribe to all events
+        conn.subscribe(function() {
+            if(rdyCb) rdyCb(evt);
+        });
     });
 
     for(var i = 0, len = Cli.commands.length; i < len; ++i) {
-	var cmd = Cli.commands[i];
+        var cmd = Cli.commands[i];
 
-	this.router.on(cmd[1], this[cmd[0].replace('/', 'slash_')].bind(this));
+        this.router.on(cmd[1], this[cmd[0].replace('/', 'slash_')].bind(this));
     }
 
     this.rl.setPrompt('$> ', 3);
@@ -93,7 +93,7 @@ Cli.prototype.slash_help = function() {
     //display help
     console.log('Commands:');
     for(var i = 0, len = Cli.commands.length; i < len; ++i) {
-	console.log(Cli.commands[i][0]);
+        console.log(Cli.commands[i][0]);
     }
     this.rl.prompt();
 };
@@ -112,12 +112,12 @@ Cli.prototype._onEvent = function(evt) {
     job = evt.getHeader('Job-UUID');
 
     if(txt.indexOf('Job-UUID') !== -1) {
-	txt += ': ' + evt.getHeader('Job-UUID');
+        txt += ': ' + evt.getHeader('Job-UUID');
     }
 
     if(txt) {
-	console.log(txt);
-	this.rl.prompt();
+        console.log(txt);
+        this.rl.prompt();
     }
 };
 
@@ -126,9 +126,9 @@ Cli.prototype._onLine = function(line) {
     line = line.trim();
 
     if(line)
-	this.router.dispatch('on', line.trim());
+        this.router.dispatch('on', line.trim());
     else
-	this.rl.prompt();
+        this.rl.prompt();
 };
 
 Cli.prototype._onNotFound = function() {
@@ -157,7 +157,7 @@ Cli.prototype._onCont = function() {
 Cli.prototype._completer = function(line) {
     var completions = Cli.commands,
     hits = completions.filter(function(c) {
-	return c[0].indexOf(line) === 0;
+        return c[0].indexOf(line) === 0;
     });
 
     //returns [[matching, entries], originalSubstring]

@@ -6,24 +6,24 @@
     "author": "Chad Engler <Chad.Engler@patlive.com>",
     "homepage": "https://github.com/englercj/node-esl",
     "repository": {
-	"type": "git",
-	"url": "https://github.com/englercj/node-esl.git"
+        "type": "git",
+        "url": "https://github.com/englercj/node-esl.git"
     },
     "bugs": "https://github.com/englercj/node-esl/issues",
     "main": "lib/esl.js",
     "dependencies": {
-	"utile": "0.1.x",
-	"eventemitter2": "0.4.x",
-	"xml2js": "0.2.x"
+        "utile": "0.1.x",
+        "eventemitter2": "0.4.x",
+        "xml2js": "0.2.x"
     },
     "devDependencies": {
-	"vows": "0.6.x",
-	"portfinder": "0.2.x"
+        "vows": "0.6.x",
+        "portfinder": "0.2.x"
     },
     "scripts": {
-	"test": "vows --spec"
+        "test": "vows --spec"
     },
     "engines": {
-	"node": ">=0.6.x"
+        "node": ">=0.6.x"
     }
 }

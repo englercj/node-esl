@@ -11,17 +11,17 @@
             if($this.val().length === parseInt($this.attr('maxlength'), 10) && $this.next().length)
                 $this.next().focus();
 
-	    if(e.which === 13) openChat();
+            if(e.which === 13) openChat();
         });
 
         $('#btnConnect').on('click', openChat);
 
         $('#btnSend').on('click', sendMessage);
         $('#msgtxt').on('keypress', function(e) {
-	    if(e.which === 13) sendMessage(e);
+            if(e.which === 13) sendMessage(e);
         });
 
-	socket.on('recvmsg', recvMessage);
+        socket.on('recvmsg', recvMessage);
     });
 
     //send a text
@@ -43,12 +43,12 @@
                 $elm.addClass('failed').data('error', evt['Reply-Text']);
         });
 
-	$('#msgtxt').val('');
+        $('#msgtxt').val('');
     }
 
     //get a text
     function recvMessage(msg) {
-	$('#messages').append(createMsgBox(msg, true));
+        $('#messages').append(createMsgBox(msg, true));
     }
 
     //opens a chat session with a number

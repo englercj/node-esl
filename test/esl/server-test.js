@@ -56,5 +56,29 @@ vows.describe('esl.Server').addBatch({
                 assert.equal(o.server, o.eslServer.server);
             }
         }
+    },
+    'Bind events': {
+        topic: function() {
+            var t = this;
+            portfinder.getPort(function(err, port) {
+                if(err) throw err;
+
+                var server = new Server({ port: port , myevents: true}, function() {
+                    t.callback(null, server);
+                });
+            });
+        },
+        'exist': {
+        topic: function(s) { return s;},
+        'bind_events': function(s) {
+            assert.equal(s.bind_events, true);
+        }
+    },
+        'emit': {
+            topic: function(s) { return s; },
+            'connection::open': macros.testServerConnectionEvent('connection::open', data.event.cmdReply('ok')),
+            'connection::close': macros.testServerConnectionEvent('connection::close')
+        },
     }
 }).export(module);
+

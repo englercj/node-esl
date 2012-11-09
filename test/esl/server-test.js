@@ -70,8 +70,8 @@ vows.describe('esl.Server').addBatch({
         },
         'exist': {
         topic: function(s) { return s;},
-            'bind_events': function(s) {
-                assert.equal(s.bind_events, true);
+            'bindEvents': function(s) {
+                assert.equal(s.bindEvents, true);
             }
         },
         'emit': {

@@ -1,14 +1,14 @@
 {
-	"name": "esl-server",
-	"preferGlobal": "true",
-	"version": "0.0.1",
-	"author": "Lucas Fontes <lxfontes@gmail.com>",
-	"description": "ESL demo server.",
-	"engines": {
-		"node": ">=0.8"
-	},
-	"dependencies": {
-		"modesl"     : "https://github.com/lxfontes/node-esl/tarball/master"
-	},
-	"private": true
+    "name": "esl-server",
+    "preferGlobal": "true",
+    "version": "0.0.1",
+    "author": "Lucas Fontes <lxfontes@gmail.com>",
+    "description": "ESL demo server.",
+    "engines": {
+        "node": ">=0.8"
+    },
+    "dependencies": {
+        "modesl"     : "https://github.com/lxfontes/node-esl/tarball/master"
+    },
+    "private": true
 }

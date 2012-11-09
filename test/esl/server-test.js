@@ -70,15 +70,15 @@ vows.describe('esl.Server').addBatch({
         },
         'exist': {
         topic: function(s) { return s;},
-        'bind_events': function(s) {
-            assert.equal(s.bind_events, true);
-        }
-    },
+            'bind_events': function(s) {
+                assert.equal(s.bind_events, true);
+            }
+        },
         'emit': {
             topic: function(s) { return s; },
             'connection::open': macros.testServerConnectionEvent('connection::open', data.event.cmdReply('ok')),
             'connection::close': macros.testServerConnectionEvent('connection::close')
-        },
+        }
     }
 }).export(module);
 

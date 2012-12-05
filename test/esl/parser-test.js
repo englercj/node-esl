@@ -19,6 +19,12 @@ vows.describe('esl.Parser').addBatch({
             'plain': macros.testEvent(data.stream.plain, heads, Parser),
             'json': macros.testEvent(data.stream.json, heads, Parser),
             'xml': macros.testEvent(data.stream.xml, heads, Parser)
+        },
+        'parse 2': {
+            'normal': macros.testEvent2(data.stream.normal, heads, Parser),
+            'plain': macros.testEvent2(data.stream.plain, heads, Parser),
+            'json': macros.testEvent2(data.stream.json, heads, Parser),
+            'xml': macros.testEvent2(data.stream.xml, heads, Parser)
         }
     }
 }).export(module);

@@ -72,6 +72,10 @@ var macros = module.exports = {
         };
     },
     //macro for testing the parsing of event text sent over a socket
+    testEvent2: function(data, heads, Parser) {
+        return macros.parseEvent(data + data, heads, Parser);
+    },
+    //macro for testing the parsing of event text sent over a socket
     parseEvent: function(data, heads) {
         return {
             topic: function(o) {

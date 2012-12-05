@@ -1,5 +1,6 @@
 *~
 \#*#
+*.sublime-*
 nbproject/
 node_modules/
 lib-cov/

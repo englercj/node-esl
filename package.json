@@ -1,6 +1,6 @@
 {
     "name": "modesl",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "FreeSWITCH ESL Node.js Implementation",
     "keywords": ["freeswitch", "api", "wrapper", "esl", "event", "socket", "library"],
     "author": "Chad Engler <Chad.Engler@patlive.com>",

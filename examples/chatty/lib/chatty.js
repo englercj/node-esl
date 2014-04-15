@@ -48,7 +48,12 @@ Chatty.prototype._init = function() {
 
         socket.on('sendmsg', function(msg, fn) {
             socket.get('number', function(err, num) {
-                self.fsw.message(num + '@' + self.provider, self.from, self.profile, msg, function(evt) {
+                self.fsw.message({
+                    to: num + '@' + self.provider,
+                    from: self.from,
+                    profile: self.profile,
+                    body: msg
+                }, function(evt) {
                     fn(evt.serialize('json'));
                 });
             });

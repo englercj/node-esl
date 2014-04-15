@@ -163,7 +163,6 @@ function testConnectionInstance(conn) {
     //var defaults
     expect(conn.execAsync).to.equal(false);
     expect(conn.execLock).to.equal(false);
-    expect(conn.connecting).to.equal(false);
     expect(conn.authed).to.equal(false);
     expect(conn.channelData).to.be.null;
     expect(conn.cmdCallbackQueue).to.be.empty;

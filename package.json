@@ -19,7 +19,8 @@
     "dependencies": {
         "utile": "~0.2",
         "eventemitter2": "~0.4",
-        "xml2js": "~0.4"
+        "xml2js": "~0.4",
+        "node-uuid": "~1.4"
     },
 
     "devDependencies": {

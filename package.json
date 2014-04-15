@@ -1,21 +1,27 @@
 {
     "name": "modesl",
-    "version": "0.0.13",
+    "version": "1.0.0",
     "description": "FreeSWITCH ESL Node.js Implementation",
+
+    "author": "Chad Engler <chad@pantherdev.com>",
+
     "keywords": ["freeswitch", "api", "wrapper", "esl", "event", "socket", "library"],
-    "author": "Chad Engler <Chad.Engler@patlive.com>",
     "homepage": "https://github.com/englercj/node-esl",
+    "bugs": "https://github.com/englercj/node-esl/issues",
+
     "repository": {
         "type": "git",
         "url": "https://github.com/englercj/node-esl.git"
     },
-    "bugs": "https://github.com/englercj/node-esl/issues",
-    "main": "lib/esl.js",
+
+    "main": "lib/esl",
+
     "dependencies": {
         "utile": "~0.2",
         "eventemitter2": "~0.4",
         "xml2js": "~0.4"
     },
+
     "devDependencies": {
         "grunt": "~0.4",
         "grunt-contrib-jshint": "~0.10",
@@ -27,10 +33,20 @@
         "sinon": "~1.9",
         "sinon-chai": "~2.5"
     },
+
     "scripts": {
         "test": "grunt test"
     },
+
     "engines": {
-        "node": ">=0.8"
+        "node": ">= 0.8.2"
+    },
+
+    "config": {
+        "blanket": {
+            "pattern": [
+                "node-esl/lib"
+            ]
+        }
     }
 }

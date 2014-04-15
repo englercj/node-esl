@@ -25,9 +25,6 @@ module.exports = function(grunt) {
             },
             lib: {
                 src: '<%= dirs.lib %>/**/*.js'
-            },
-            test: {
-                src: '<%= dirs.test %>/**/*.js'
             }
         },
         //runs our tests

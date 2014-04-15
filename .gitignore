@@ -1,8 +1,22 @@
+# git keep files
+!.gitkeep
+
+# sublime text files
+*.sublime-*
+*.*~*.TMP
+
+# temp files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# vim swap files
+*.sw*
+
+# emacs temp files
 *~
 \#*#
-*.sublime-*
-nbproject/
+
+# node.js common ignores
 node_modules/
-lib-cov/
-coverage.*
-config.json
+npm-debug.log

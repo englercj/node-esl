@@ -28,6 +28,10 @@ describe('esl.Parser', function() {
     describe('plain events doubled', describeEvents(data.stream.plain + data.stream.plain));
     describe('json events doubled', describeEvents(data.stream.json + data.stream.json));
     describe('xml events doubled', describeEvents(data.stream.xml + data.stream.xml));
+
+    after(function() {
+        socket.end();
+    });
 });
 
 function describeEvents(streamData) {

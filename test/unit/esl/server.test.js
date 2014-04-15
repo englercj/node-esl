@@ -5,24 +5,27 @@ var data = require('../../fixtures/data'),
     net = require('net');
 
 describe('esl.Server', function() {
-    it('should have the correct exports', function() {
+    it('should have the correct exports', function(done) {
         //is function
         expect(Server).to.be.a('function');
 
         var server = new Server();
 
-        //is instance
-        expect(server).to.be.an.instanceof(Server);
+        testServerInstance(server);
 
-        //private functions
-        expect(server._onConnection).to.be.a('function');
-        expect(server._onListening).to.be.a('function');
-        expect(server._generateId).to.be.a('function');
+        server.on('ready', function() {
+            server.close();
+            done();
+        });
+    });
 
-        //var defaults
-        expect(server.connections).to.be.an('object');
-        expect(server.port).to.be.a('number');
-        expect(server.host).to.equal('127.0.0.1');
+    it('should work with only a callback set', function(done) {
+        var server = new Server(function() {
+            server.close();
+            done();
+        });
+
+        testServerInstance(server);
     });
 
     it('should use a custom server instance', function(done) {
@@ -31,6 +34,8 @@ describe('esl.Server', function() {
 
             var eslServer = new Server({ server: server }, function() {
                 expect(eslServer.server).to.equal(server);
+
+                eslServer.close();
 
                 done();
             });
@@ -61,6 +66,10 @@ describe('esl.Server', function() {
         it('should emit connection::close event', function(done) {
             testServerEvent(done, server, 'connection::close');
         });
+
+        after(function() {
+            server.close();
+        });
     });
 
     describe('bind events', function() {
@@ -81,11 +90,19 @@ describe('esl.Server', function() {
         });
 
         it('should emit connection::open event', function(done) {
-            testServerEvent(done, evtServer, 'connection::open', data.event.cmdReply('ok'))
+            testServerEvent(done, evtServer, 'connection::open')
+        });
+
+        it('should emit connection::ready event', function(done) {
+            testServerEvent(done, evtServer, 'connection::ready', data.event.channelData);
         });
 
         it('should emit connection::close event', function(done) {
             testServerEvent(done, evtServer, 'connection::close')
+        });
+
+        after(function() {
+            evtServer.close();
         });
     });
 });
@@ -111,21 +128,40 @@ function testServerEvent(done, server, name, channelData) {
 
     if(channelData) {
         //when esl.Connection sends 'connect' event
-        socket.on('data', function(data) {
-            if(data.toString().indexOf('connect') !== -1) {
+        socket.on('data', function(buffer) {
+            var str = buffer.toString();
+
+            console.log(str);
+
+            if(server.bindEvents) {
+                if(str.indexOf('connect') !== -1) {
+                    socket.write(channelData + '\n');
+                } else if(str.indexOf('myevents') !== -1) {
+                    socket.write(channelData + '\n');
+                    socket.end();
+                }
+            } else if(str.indexOf('connect') !== -1) {
                 //write channel data to it
                 socket.write(channelData + '\n');
-
-                //wait a tick and close
-                process.nextTick(function() {
-                    socket.end();
-                });
+                socket.end();
             }
         });
     } else {
-        //wait a tick and close
-        process.nextTick(function() {
-            socket.end();
-        });
+        socket.end();
     }
+}
+
+function testServerInstance(server) {
+    //is instance
+    expect(server).to.be.an.instanceof(Server);
+
+    //private functions
+    expect(server._onConnection).to.be.a('function');
+    expect(server._onListening).to.be.a('function');
+    expect(server._generateId).to.be.a('function');
+
+    //var defaults
+    expect(server.connections).to.be.an('object');
+    expect(server.port).to.be.a('number');
+    expect(server.host).to.equal('127.0.0.1');
 }

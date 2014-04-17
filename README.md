@@ -1,4 +1,4 @@
-## FreeSWITCH ESL Bindings for Node.js
+## FreeSWITCH ESL Bindings for Node.js [![Build Status](https://travis-ci.org/englercj/node-esl.svg?branch=master)](https://travis-ci.org/englercj/node-esl)
 
 A Library for handling low-level FreeSWITCH ESLconnections, and associated ESLevents.
 
@@ -63,7 +63,7 @@ npm test
 
 ### TODO
 
- - Add tests for 
+ - Add tests for
   * `esl.Connection`
  - Add more examples for
   * IVR App

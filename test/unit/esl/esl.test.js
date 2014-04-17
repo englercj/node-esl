@@ -1,4 +1,4 @@
-var esl = require('../../lib/esl');
+var esl = require('../../../lib/esl/esl');
 
 describe('Event Socket Library', function() {
     it('should have the correct exports', function() {
@@ -6,12 +6,6 @@ describe('Event Socket Library', function() {
         expect(esl.eslSetLogLevel).to.be.a('function');
         expect(esl.setLogLevel).to.be.a('function');
         expect(esl.eslSetLogLevel).to.equal(esl.setLogLevel);
-
-        //ESL Objects
-        expect(esl.Event).to.be.a('function');
-        expect(esl.Connection).to.be.a('function');
-        expect(esl.Server).to.be.a('function');
-        expect(esl.Parser).to.be.a('function');
     });
 
     it('should properly set log level', function() {

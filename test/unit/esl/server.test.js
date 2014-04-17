@@ -1,7 +1,7 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
     macros = require('../../fixtures/macros'),
-    Server = require('../../../lib/esl/server').Server,
+    Server = require('../../../lib/esl/server'),
     net = require('net');
 
 describe('esl.Server', function() {

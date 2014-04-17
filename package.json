@@ -14,7 +14,7 @@
         "url": "https://github.com/englercj/node-esl.git"
     },
 
-    "main": "lib/esl",
+    "main": "lib/index",
 
     "dependencies": {
         "utile": "~0.2",

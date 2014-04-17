@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 
     //test tasks
     grunt.registerTask('test', ['jshint', 'mochacov:unit', 'mochacov:coverage']);
-    grunt.registerTask('travis', ['jshint', 'mochacov:unit', 'mochacov:coverage', 'mochacov:coveralls']);
+    grunt.registerTask('travis', ['jshint', 'mochacov:unit', 'mochacov:coverage'/*, 'mochacov:coveralls'*/]);
 
     //Project Configuration
     grunt.initConfig({

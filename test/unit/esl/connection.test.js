@@ -1,7 +1,7 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
     macros = require('../../fixtures/macros'),
-    Connection = require('../../../lib/esl/connection');
+    Connection = require('../../../lib/esl/Connection');
 
 describe('esl.Connection', function() {
     describe('Outbound Connection', function() {

@@ -1,6 +1,6 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
-    Event = require('../../../lib/esl/event');
+    Event = require('../../../lib/esl/Event');
 
 describe('esl.Event', function() {
     it('should have the correct exports', function() {

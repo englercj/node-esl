@@ -10,10 +10,10 @@
         "url": "https://github.com/englercj/node-esl.git"
     },
     "dependencies": {
-        "modesl": "git+https://github.com/englercj/node-esl.git"
+        "modesl": "*"
     },
     "engines": {
-        "node": ">=0.8"
+        "node": ">=0.8.x"
     },
     "private": true
 }

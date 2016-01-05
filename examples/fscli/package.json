@@ -9,9 +9,9 @@
         "url": "https://github.com/englercj/node-esl.git"
     },
     "dependencies": {
-        "modesl": "0.x",
-        "director": "1.1.x",
-        "optimist": "0.3.x"
+        "modesl": "*",
+        "director": "^1.2.8",
+        "optimist": "^0.6.1"
     },
     "engines": {
         "node": ">=0.8.x"

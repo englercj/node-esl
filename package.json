@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "grunt": "~0.4",
-    "grunt-contrib-jshint": "~0.10",
-    "grunt-mocha-cov": "~0.2",
+    "grunt-contrib-jshint": "~0.12",
+    "grunt-mocha-cov": "~0.4",
     "mocha-term-cov-reporter": "~0.2",
     "chai": "~1.9",
     "sinon": "~1.9",

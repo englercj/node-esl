@@ -95,6 +95,34 @@ describe('esl.Connection', function() {
                 );
             });
         });
+
+        describe('.execute()', function() {
+            var uuid = 'f6a2ae66-2a0d-4ede-87ae-1da2ef25ada5',
+                uuid2 = 'a5eac28e-b623-463d-87ad-b9de90afaf33';
+
+            it('should invoke the callback', function(done) {
+                testChannelExecute(conn, 'playback', 'foo', uuid, function(evt) {
+                    expect(evt.getHeader('Application')).to.equal('playback');
+                    done();
+                });
+            });
+
+            it('should invoke only one callback on the same session', function(done) {
+                testChannelExecute(conn, 'hangup', '', uuid, function(evt) {
+                    expect(evt.getHeader('Application')).to.equal('hangup');
+                    done();
+                });
+            });
+
+            it('should invoke a callback for a different session', function(done) {
+                testChannelExecute(conn, 'hangup', '', uuid2, function(evt) {
+                    expect(evt.getHeader('Application')).to.equal('hangup');
+                    done();
+                });
+            });
+
+        });
+
         /*,
         '.sendRecv()': {
             topic: function() { return null; },
@@ -190,4 +218,40 @@ function testConnectionSend(done, conn, args, expected) {
     });
 
     conn.send.apply(conn, args);
+}
+
+function sendChannelExecuteResponse(conn, appUuid, appName, appArg, uuid) {
+    // condensed output from FreeSWITCH to test relevant parts.
+    var resp = [
+        'Event-Name: CHANNEL_EXECUTE_COMPLETE',
+        'Unique-ID: ' + uuid,
+        'Application: ' + appName,
+        'Application-Response: _none_',
+        'Application-UUID: ' + appUuid,
+        '',
+        '',
+    ].join('\n');
+    conn.socket.write('Content-Type: text/event-plain\n');
+    conn.socket.write('Content-Length: ' + resp.length + '\n\n');
+    conn.socket.write(resp);
+}
+
+function testChannelExecute(conn, appName, appArg, uuid, cb) {
+    conn.socket.once('data', function(data) {
+        data = data.toString('utf8');
+        var lines = data.split('\n');
+
+        expect(lines).to.contain('call-command: execute');
+        expect(lines).to.contain('execute-app-name: ' + appName);
+        expect(lines).to.contain('execute-app-arg: ' + appArg);
+
+        // first send an unrelated message that should not be picked up.
+        var otherUuid = 'fee64ea1-c11d-4a1b-9715-b755fed7a557';
+        sendChannelExecuteResponse(conn, otherUuid, 'sleep', '1', uuid);
+
+        var appUuid = /\nEvent-UUID: ([0-9a-f-]+)\n/.exec(data)[1];
+        sendChannelExecuteResponse(conn, appUuid, appName, appArg, uuid);
+    });
+
+    conn.execute(appName, appArg, uuid, cb);
 }

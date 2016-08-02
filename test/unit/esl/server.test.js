@@ -35,6 +35,7 @@ describe('esl.Server', function() {
             var eslServer = new Server({ server: server }, function() {
                 expect(eslServer.server).to.equal(server);
 
+                client.end();
                 eslServer.close();
 
                 done();

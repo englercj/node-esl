@@ -5,11 +5,14 @@ var data = require('../../fixtures/data'),
     parser, socket;
 
 describe('esl.Parser', function() {
+    var serverSocket;
+
     before(function(done) {
         macros.getEchoServerSocket(function(err, client, server) {
             if(err) return done(err);
 
             socket = client;
+            serverSocket = server;
             parser = new Parser(client);
             done();
         });
@@ -31,6 +34,7 @@ describe('esl.Parser', function() {
 
     after(function() {
         socket.end();
+        serverSocket.close();
     });
 });
 

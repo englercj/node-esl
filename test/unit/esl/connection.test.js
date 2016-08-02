@@ -5,12 +5,13 @@ var data = require('../../fixtures/data'),
 
 describe('esl.Connection', function() {
     describe('Outbound Connection', function() {
-        var conn;
+        var serverSocket, conn;
 
         before(function(done) {
             macros.getEchoServerSocket(function(err, client, server) {
                 if(err) return done(err);
 
+                serverSocket = server;
                 conn = new Connection(client);
                 done();
             });
@@ -25,15 +26,23 @@ describe('esl.Connection', function() {
 
             testConnectionInstance(conn);
         });
+
+        after(function() {
+            conn.disconnect();
+            serverSocket.close();
+        });
     });
 
     describe('Inbound Connection', function() {
-        var conn;
+        var serverSocket, conn;
 
         before(function(done) {
             macros.getEchoServerSocket(function(err, client, server) {
                 if(err) return done(err);
 
+                serverSocket = server;
+                // no need for the given client, we will set up a new one below.
+                client.end();
                 conn = new Connection('localhost', server.address().port, 'ClueCon');
                 done();
             });
@@ -123,6 +132,11 @@ describe('esl.Connection', function() {
                 }
             }
         }*/
+
+        after(function() {
+            conn.disconnect();
+            serverSocket.close();
+        });
     });
 });
 

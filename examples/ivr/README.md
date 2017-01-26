@@ -4,10 +4,10 @@ This program is meant to work with the default Freeswitch directory, which conta
 
 The ivr will play a menu recording instructing the caller to:
 
-*a. Press '2' for sales.*
-*b. Press '3' for technical support.*
-*c. Press '4' for billing.*
-*d. Enter the extension you want to call followed by the '#' key*
+1. *Press '2' for sales.*
+2. *Press '3' for technical support.*
+3. *Press '4' for billing.*
+4. *Enter the extension you want to call followed by the '#' key*
 
 The reason the menu starts with 2 is because then I could easily allow callers to dial the default extensions 10xx without calling a group.
 

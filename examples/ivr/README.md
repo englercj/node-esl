@@ -1,6 +1,10 @@
 # ESL IVR demo
 
-This program is meant to work with the default Freeswitch directory, which contains extension 10xx and 3 groups (sales, support, and billing).
+This is a simple IVR example that is meant to work with the default Freeswitch directory, which contains extensions 10xx and 3 groups (sales, support, and billing).
+
+To do:
+- add error recording when invalid entry or extension is dialed.
+- currently, if you call an extension before playRecordings.js finishes, it will continue to play to the caller if the callee hangs up first.
 
 The ivr will play a menu recording instructing the caller to:
 

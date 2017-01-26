@@ -12,13 +12,12 @@ The ivr will play a menu recording instructing the caller to:
 The reason the menu starts with 2 is because then I could easily allow callers to dial the default extensions 10xx without calling a group.
 
 Program structure:
-```
-├── callDispatch.js
-├── dtmf.js
-├── eslServer.js
-├── package.json
-└── playRecording.js
-```
+
+    ├── callDispatch.js
+    ├── dtmf.js
+    ├── eslServer.js
+    ├── package.json
+    └── playRecording.js
 
 The best way to test this demo is to add the following to your default.xml dialplan:
 

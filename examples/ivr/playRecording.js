@@ -7,7 +7,7 @@
 
 const ivrMenu = (conn) => {
   try {
-    conn.execute('playback', './recordings/recordings/transfer1.wav');
+    conn.execute('playback', './recordings/transfer1.wav');
     conn.execute('playback', './recordings/ivr-or.wav');
     conn.execute('playback', './recordings/4.wav');
     conn.execute('playback', './recordings/vm-press.wav');

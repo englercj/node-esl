@@ -1,0 +1,27 @@
+{
+  "name": "esl-ivr",
+  "preferGlobal": "true",
+  "version": "0.0.1",
+  "author": "byoungdale",
+  "description": "ESL demo ivr menu.",
+  "homepage": "https://github.com/byoungdale/node-esl",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/byoungdale/node-esl.git"
+  },
+  "dependencies": {
+    "modesl": "*"
+  },
+  "engines": {
+    "node": ">=0.8.x"
+  },
+  "private": true,
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.14.0",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0"
+  }
+}

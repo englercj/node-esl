@@ -9,23 +9,23 @@ var data = {
             'FreeSWITCH-IPv6': '::1',
             'Event-Date-Local': '2012-09-25 14:22:37',
             'Event-Date-GMT': 'Tue, 25 Sep 2012 18:22:37 GMT',
-            'Event-Date-Timestamp': '1348597357036551',
+            'Event-Date-Timestamp': 1348597357036551,
             'Event-Calling-File': 'switch_cpp.cpp',
             'Event-Calling-Function': 'Event',
-            'Event-Calling-Line-Number': '262',
-            'Event-Sequence': '11027',
+            'Event-Calling-Line-Number': 262,
+            'Event-Sequence': 11027,
             'Event-Subclass': 'SMS::SEND_MESSAGE',
             'proto': 'sip',
             'dest_proto': 'sip',
             'from': '##########',
             'from_full': '##########',
-            'to': 'internal/##########@zip-zop-bobity-boop.com',
+            'to': 'internal/"weird&character\'s<andstuff>"@zip-zop-bobity-boop.com',
             'subject': 'None',
             'type': 'text/plain',
             'hint': 'the hint',
             'replying': 'true',
-            'Content-Length': 23,
-            '_body': 'Hello from Chad Engler!'
+            'Content-Length': 53,
+            '_body': 'Hello from Chad Engler! "weird&character\'s<andstuff>"'
         }, null, 2),
         plain: [
             'Event-Name: CUSTOM',
@@ -46,14 +46,14 @@ var data = {
             'dest_proto: sip',
             'from: ##########',
             'from_full: ##########',
-            'to: internal/##########@zip-zop-bobity-boop.com',
+            'to: internal/"weird&character\'s<andstuff>"@zip-zop-bobity-boop.com',
             'subject: None',
             'type: text/plain',
             'hint: the hint',
             'replying: true',
-            'Content-Length: 23',
+            'Content-Length: 53',
             '',
-            'Hello from Chad Engler!'
+            'Hello from Chad Engler! "weird&character\'s<andstuff>"'
         ].join('\n'),
         xml: [
             '<event>',
@@ -76,21 +76,21 @@ var data = {
             '    <dest_proto>sip</dest_proto>',
             '    <from>##########</from>',
             '    <from_full>##########</from_full>',
-            '    <to>internal/##########@zip-zop-bobity-boop.com</to>',
+            '    <to>internal/&quot;weird&amp;character&apos;s&lt;andstuff&gt;&quot;@zip-zop-bobity-boop.com</to>',
             '    <subject>None</subject>',
             '    <type>text/plain</type>',
             '    <hint>the hint</hint>',
             '    <replying>true</replying>',
-            '    <Content-Length>23</Content-Length>',
+            '    <Content-Length>78</Content-Length>',
             '  </headers>',
-            '  <body>Hello from Chad Engler!</body>',
+            '  <body>Hello from Chad Engler! &quot;weird&amp;character&apos;s&lt;andstuff&gt;&quot;</body>',
             '</event>'
         ].join('\n'),
         badJson: [
             '{ herp: derp }'
         ].join('\n'),
         badXml: [
-            '<herp|"derp<//>>'
+            '<herp|&"derp<//>>'
         ].join('\n'),
         channelData: [
             'Channel-Username: 1001',

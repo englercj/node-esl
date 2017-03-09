@@ -21,8 +21,8 @@
   "main": "lib/index",
   "dependencies": {
     "eventemitter2": "~0.4",
-    "xml2js": "~0.4",
-    "node-uuid": "~1.4"
+    "node-uuid": "~1.4",
+    "xml2js": "~0.4"
   },
   "devDependencies": {
     "grunt": "~0.4",

@@ -1,5 +1,6 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
+    encodeXml = require('../../../lib/util/xml').encodeXml,
     Event = require('../../../lib/esl/Event');
 
 describe('esl.Event', function() {
@@ -160,15 +161,22 @@ describe('esl.Event', function() {
         describe('.serialize()', function() {
             it('should serialize into json', function() {
                 expect(e.serialize('json')).to.equal(data.event.json);
+
+                expect(Buffer.byteLength(e.body)).to.equal(e.getHeader('Content-Length'));
             });
 
             it('should serialize into plain', function() {
                 expect(e.serialize('plain')).to.equal(data.event.plain);
                 expect(e.serialize('plain')).to.equal(e.serialize());
+
+                expect(Buffer.byteLength(e.body)).to.equal(e.getHeader('Content-Length'));
             });
 
             it('should serialize into xml', function() {
                 expect(e.serialize('xml')).to.equal(data.event.xml);
+
+                var xmlBody = typeof e.body === 'string' ? encodeXml(e.body) : e.body;
+                expect(Buffer.byteLength(xmlBody)).to.equal(e.getHeader('Content-Length'));
             });
         });
 

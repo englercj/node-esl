@@ -1,6 +1,6 @@
 {
-  "name": "modesl",
-  "version": "1.1.9",
+  "name": "freeswitch-esl",
+  "version": "1.0.0",
   "description": "FreeSWITCH ESL Node.js Implementation",
   "author": "Chad Engler <chad@pantherdev.com>",
   "keywords": [
@@ -20,24 +20,22 @@
   },
   "main": "lib/index",
   "dependencies": {
-    "eventemitter2": "~0.4",
-    "node-uuid": "~1.4",
+    "eventemitter2": "~4.1.0",
+    "uuid": "^3.0.1",
     "xml2js": "~0.4"
   },
   "devDependencies": {
-    "grunt": "~0.4",
-    "grunt-contrib-jshint": "~0.12",
-    "grunt-mocha-cov": "~0.4",
     "mocha-term-cov-reporter": "~0.2",
-    "chai": "~1.9",
-    "sinon": "~1.9",
-    "sinon-chai": "~2.5"
+    "chai": "~4.0.2",
+    "sinon": "~2.3.2",
+    "sinon-chai": "~2.10.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "mocha --recursive ./test/",
+    "test:watch": "mocha --recursive --watch ./test/"
   },
   "engines": {
-    "node": ">= 0.8.2"
+    "node": ">= 6.9.0"
   },
   "config": {
     "blanket": {

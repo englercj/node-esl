@@ -20,3 +20,6 @@ Desktop.ini
 # node.js common ignores
 node_modules/
 npm-debug.log
+
+# ts build
+__build__

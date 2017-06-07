@@ -1,14 +1,7 @@
-var esl = module.exports = {};
-
 //
 // ESL Object
 // http://wiki.freeswitch.org/wiki/Event_Socket_Library#ESL_Object
 //
-
-esl._log = false;
-esl._level = 0;
-esl._logger = console.log;
-
 //Calling this function within your program causes your program to
 // issue informative messages related to the Event Socket Library
 // on STDOUT. $loglevel is an integer between 0 and 7. The values for $loglevel mean:
@@ -30,25 +23,44 @@ esl._logger = console.log;
 //eslSetLogLevel is implemented as class-level method, as opposed to an
 // instance-level method, so you do not need to create a new instance of the
 // class to call this method.
-esl.setLogLevel = esl.eslSetLogLevel = function(level) {
-    esl._log = true;
-
-    if(typeof level === 'number')
-        esl._level = level;
-};
 
 //called by a connection object on log/data events
-esl._doLog = function(evt) {
-    if(!esl._log || evt.getHeader('Log-Level') > esl._level) return;
 
-    var msg = '';
+export class Esl {
 
-    if(esl._level === 7) {
-        msg += evt.serialize();
-        msg += '\n\n';
+    _log: boolean;
+    _level: number;
+    _logger: Console;
+
+    constructor() {
+        this._log = false;
+        this._level = 0;
     }
 
-    msg += evt.getBody();
+    setLogLevel(level: number) {
+        this._log = true;
 
-    esl._logger(msg);
-};
+        this._level = level;
+    }
+
+    _logMessage(msg: string) {
+        console.log(msg);
+    }
+
+    _doLog(evt: any) {
+        if (!this._log || evt.getHeader('Log-Level') > this._level) return;
+
+        var msg = '';
+
+        if (this._level === 7) {
+            msg += evt.serialize();
+            msg += '\n\n';
+        }
+
+        msg += evt.getBody();
+
+        this._logMessage(msg);
+    }
+}
+
+export const esl = new Esl();

@@ -1,16 +1,18 @@
-var esl = require('../../lib/index');
+const esl = require('../../__build__/src').esl;
+const Event = require('../../__build__/src').Event;
+const Connection = require('../../__build__/src').Connection;
+const Parser = require('../../__build__/src').Parser;
+const Server = require('../../__build__/src').Server;
 
 describe('Event Socket Library', function() {
     it('should have the correct exports', function() {
         //global functions
-        expect(esl.eslSetLogLevel).to.be.a('function');
         expect(esl.setLogLevel).to.be.a('function');
-        expect(esl.eslSetLogLevel).to.equal(esl.setLogLevel);
 
         //ESL Objects
-        expect(esl.Event).to.be.a('function');
-        expect(esl.Connection).to.be.a('function');
-        expect(esl.Server).to.be.a('function');
-        expect(esl.Parser).to.be.a('function');
+        expect(Event).to.be.a('function');
+        expect(Connection).to.be.a('function');
+        expect(Server).to.be.a('function');
+        expect(Parser).to.be.a('function');
     });
 });

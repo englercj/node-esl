@@ -6,25 +6,28 @@
   "keywords": [
     "freeswitch",
     "api",
-    "wrapper",
+    "typescript",
     "esl",
     "event",
     "socket",
     "library"
   ],
+  "main": "lib/index",
+  "typings": "__build__/src/index.d.ts",
   "homepage": "https://github.com/englercj/node-esl",
   "bugs": "https://github.com/englercj/node-esl/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/englercj/node-esl.git"
   },
-  "main": "lib/index",
   "dependencies": {
     "eventemitter2": "~4.1.0",
     "uuid": "^3.0.1",
     "xml2js": "~0.4"
   },
   "devDependencies": {
+    "@types/eventemitter2": "^2.2.1",
+    "@types/node": "^7.0.28",
     "mocha-term-cov-reporter": "~0.2",
     "chai": "~4.0.2",
     "sinon": "~2.3.2",
@@ -36,12 +39,5 @@
   },
   "engines": {
     "node": ">= 6.9.0"
-  },
-  "config": {
-    "blanket": {
-      "pattern": [
-        "node-esl/lib"
-      ]
-    }
   }
 }

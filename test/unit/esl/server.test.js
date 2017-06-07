@@ -1,7 +1,7 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
     macros = require('../../fixtures/macros'),
-    Server = require('../../../lib/esl/Server'),
+    Server = require('../../../__build__/src').Server,
     net = require('net');
 
 describe('esl.Server', function() {
@@ -10,6 +10,8 @@ describe('esl.Server', function() {
         expect(Server).to.be.a('function');
 
         var server = new Server();
+
+        server.initialize();
 
         testServerInstance(server);
 
@@ -20,10 +22,13 @@ describe('esl.Server', function() {
     });
 
     it('should work with only a callback set', function(done) {
-        var server = new Server(function() {
+        var server = new Server();
+        
+        server.initialize(function() {
             server.close();
             done();
         });
+
 
         testServerInstance(server);
     });
@@ -32,7 +37,9 @@ describe('esl.Server', function() {
         macros.getEchoServerSocket(function(err, client, server) {
             if(err) return done(err);
 
-            var eslServer = new Server({ server: server }, function() {
+            var eslServer = new Server();
+            
+            eslServer.initialize({ server: server }, function() {
                 expect(eslServer.server).to.equal(server);
 
                 client.end();
@@ -50,7 +57,8 @@ describe('esl.Server', function() {
             macros.getServer(function(err, netServer) {
                 if(err) return done(err);
 
-                server = new Server({ server: netServer }, function() {
+                server = new Server();
+                server.initialize({ server: netServer }, function() {
                     done();
                 });
             });
@@ -80,7 +88,9 @@ describe('esl.Server', function() {
             macros.getServer(function(err, server) {
                 if(err) return done(err);
 
-                evtServer = new Server({ server: server, myevents: true }, function() {
+                evtServer = new Server();
+                
+                evtServer.initialize({ server: server, myevents: true }, function() {
                     done();
                 });
             });

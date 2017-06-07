@@ -1,7 +1,7 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
     macros = require('../../fixtures/macros'),
-    Parser = require('../../../lib/esl/Parser'),
+    Parser = require('../../../__build__/src/esl/parser').Parser,
     parser, socket;
 
 describe('esl.Parser', function() {

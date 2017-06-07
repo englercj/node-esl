@@ -1,7 +1,7 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
-    encodeXml = require('../../../lib/util/xml').encodeXml,
-    Event = require('../../../lib/esl/Event');
+    encodeXml = require('../../../__build__/src').encodeXml,
+    Event = require('../../../__build__/src').Event;
 
 describe('esl.Event', function() {
     it('should have the correct exports', function() {

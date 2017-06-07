@@ -1,7 +1,7 @@
 var data = require('../../fixtures/data'),
     heads = JSON.parse(data.event.json),
     macros = require('../../fixtures/macros'),
-    Connection = require('../../../lib/esl/Connection');
+    Connection = require('../../../__build__/src').Connection;
 
 describe('esl.Connection', function() {
     describe('Outbound Connection', function() {
@@ -12,7 +12,8 @@ describe('esl.Connection', function() {
                 if(err) return done(err);
 
                 serverSocket = server;
-                conn = new Connection(client);
+                conn = new Connection();
+                conn.initialize(client);
                 done();
             });
         });
@@ -43,7 +44,8 @@ describe('esl.Connection', function() {
                 serverSocket = server;
                 // no need for the given client, we will set up a new one below.
                 client.end();
-                conn = new Connection('localhost', server.address().port, 'ClueCon');
+                conn = new Connection();
+                conn.initialize('localhost', server.address().port, 'ClueCon');
                 done();
             });
         });

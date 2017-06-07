@@ -1,11 +1,11 @@
-var esl = require('../../../lib/esl/esl');
+'use strict';
+const esl = require('../../../__build__/src').esl;
+const Event = require('../../../__build__/src').Event;
 
 describe('Event Socket Library', function() {
     it('should have the correct exports', function() {
         //global functions
-        expect(esl.eslSetLogLevel).to.be.a('function');
         expect(esl.setLogLevel).to.be.a('function');
-        expect(esl.eslSetLogLevel).to.equal(esl.setLogLevel);
     });
 
     it('should properly set log level', function() {
@@ -22,7 +22,7 @@ describe('Event Socket Library', function() {
         var evtObj;
 
         beforeEach(function() {
-            evtObj = new esl.Event({
+            evtObj = new Event({
                 'Event-Name': 'CUSTOM',
                 'Log-Level': 0,
                 '_body': 'Derp.'
@@ -30,7 +30,7 @@ describe('Event Socket Library', function() {
         });
 
         it('should log a string message', function(done) {
-            esl._logger = function(msg) {
+            esl._logMessage = function(msg) {
                 expect(msg).to.equal(evtObj.getBody());
                 done();
             };
@@ -40,7 +40,7 @@ describe('Event Socket Library', function() {
         });
 
         it('should log a debug message', function(done) {
-            esl._logger = function(msg) {
+            esl._logMessage = function(msg) {
                 expect(msg).to.equal(evtObj.serialize() + '\n\n' + evtObj.getBody());
                 done();
             };

@@ -73,7 +73,9 @@ var macros = module.exports = {
     },
     getInboundConnection: function(Conn, cb) {
         macros.getEchoServerSocket(function(err, client, server) {
-            var conn = new Conn('localhost', server.address().port, 'ClueCon');
+            var conn = new Conn();
+
+            conn.initialize('localhost', server.address().port, 'ClueCon');
 
             if(cb) cb(err, conn);
         });

@@ -35,16 +35,16 @@ Api.prototype.start = function() {
 Api.prototype._init = function() {
     var self = this;
 
-    //connect to freeswitch
-    // self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
-    //     self.fsw.subscribe([
-    //         'CHANNEL_CREATE',
-    //         'CHANNEL_CALLSTATE',
-    //         'CHANNEL_STATE',
-    //         'CHANNEL_EXECUTE',
-    //         'CHANNEL_EXECUTE_COMPLETE',
-    //         'CHANNEL_DESTROY'
-    //     ], function() {
+    connect to freeswitch
+    self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
+        self.fsw.subscribe([
+            'CHANNEL_CREATE',
+            'CHANNEL_CALLSTATE',
+            'CHANNEL_STATE',
+            'CHANNEL_EXECUTE',
+            'CHANNEL_EXECUTE_COMPLETE',
+            'CHANNEL_DESTROY'
+        ], function() {
             //listen on API ports
             self.server = self.app.listen(self.config.server.port, self.config.server.host);
             self.io = sio.listen(self.server);
@@ -52,18 +52,18 @@ Api.prototype._init = function() {
             //configure, and setup routes
             self._configure();
             self._setupRoutes();
-            // self._setupBuffers();
-    //     });
-    // });
+            self._setupBuffers();
+        });
+    });
 
     //setup FSW Listeners
-    // if(self.config.debug) {
-    //     self.fsw.on('esl::event::**', function(e) {
-    //         if(e.type.indexOf('CHANNEL') === -1) return;
+    if(self.config.debug) {
+        self.fsw.on('esl::event::**', function(e) {
+            if(e.type.indexOf('CHANNEL') === -1) return;
 
-    //         eyes.inspect(e, 'Event: ' + e.getHeader('Event-Name'));
-    //     });
-    // }
+            eyes.inspect(e, 'Event: ' + e.getHeader('Event-Name'));
+        });
+    }
 };
 
 Api.prototype._configure = function() {
@@ -76,7 +76,7 @@ Api.prototype._setupRoutes = function() {
     var self = this;
 
     //Express HTTP Routes
-    //self.app.get('/', function(req, res) {});
+    self.app.get('/', function(req, res) {});
 
     //Socket.io Events
     self.io.on('connection', function(socket) {

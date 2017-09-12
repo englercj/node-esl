@@ -20,7 +20,7 @@
   },
   "main": "lib/index",
   "dependencies": {
-    "eventemitter2": "~0.4",
+    "eventemitter2": "^4.1",
     "node-uuid": "~1.4",
     "xml2js": "~0.4"
   },

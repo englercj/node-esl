@@ -21,23 +21,23 @@
   "main": "lib/index",
   "dependencies": {
     "eventemitter2": "^4.1",
-    "node-uuid": "~1.4",
-    "xml2js": "~0.4"
+    "uuid": "^3.1.0",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "grunt": "~0.4",
-    "grunt-contrib-jshint": "~0.12",
-    "grunt-mocha-cov": "~0.4",
-    "mocha-term-cov-reporter": "~0.2",
-    "chai": "~1.9",
-    "sinon": "~1.9",
-    "sinon-chai": "~2.5"
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-mocha-cov": "^0.4.0",
+    "mocha-term-cov-reporter": "^0.2.3",
+    "chai": "^4.1.2",
+    "sinon": "^3.2.1",
+    "sinon-chai": "^2.13.0"
   },
   "scripts": {
     "test": "grunt test"
   },
   "engines": {
-    "node": ">= 0.8.2"
+    "node": ">=1.x"
   },
   "config": {
     "blanket": {

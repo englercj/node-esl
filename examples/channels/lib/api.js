@@ -35,7 +35,7 @@ Api.prototype.start = function() {
 Api.prototype._init = function() {
     var self = this;
 
-    connect to freeswitch
+    //connect to freeswitch
     self.fsw = new esl.Connection(self.config.fsw.host, self.config.fsw.port, self.config.fsw.password, function() {
         self.fsw.subscribe([
             'CHANNEL_CREATE',

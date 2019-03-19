@@ -51,7 +51,7 @@ message that denotes a completed Background Job.
 
 The body for the same command issued with `api` and `bgapi` should be the same; even when the headers, event type, and
 time it takes for the callback to execute are different. The Library attempts to smooth these differences out by providing
-a common interface, even though behind the scenes things are quite different.
+a common interface, even though behind the scenes things are quite different. If you are using `api`, please make sure you don't call it a second time before the callback of the first time executes, otherwise you could have the response of the first call passed to the second call callback.
 
 ### Tests
 

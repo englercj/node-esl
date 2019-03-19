@@ -161,6 +161,97 @@ describe('esl.Connection', function() {
             }
         }*/
 
+          describe('.api()', function() {
+
+            it('should call callback when esl::event::api::response comes', function(done) {
+                conn.socket.on('data', function(data) {
+                    data = data.toString('utf8');
+
+                    if (data == 'api originate\n\n') {
+                        conn.emit('esl::event::api::response', 'event');
+                    }
+                })
+
+                conn.api('originate', function(response) {
+                    expect(response).to.be.equal('event')
+                    done()
+                })
+
+            });
+
+            it('should get the wrong response for each call if called twice', function(done) {
+                conn.socket.on('data', function(data) {
+                    data = data.toString('utf8');
+                    if (data == 'api originate1\n\n') {
+                        setTimeout(function() {
+                            conn.emit('esl::event::api::response', 'originate1');
+                        }, 800);
+                        
+                    } else if (data == 'api originate2\n\n') {
+                        conn.emit('esl::event::api::response', 'originate2');
+                    }
+                })
+
+                conn.api('originate1', function(response) {
+                    expect(response).to.be.equal('originate2')
+                })
+                setTimeout(function() {
+                    conn.api('originate2', function(response) {
+                        expect(response).to.be.equal('originate1')
+                        done()
+                    })
+                }, 300)
+                
+
+            });
+          });
+
+          describe('.bgapi()', function() {
+
+            it('should call callback when esl::event::BACKGROUND_JOB::jobid1 comes', function(done) {
+                conn.socket.on('data', function(data) {
+                    data = data.toString('utf8');
+
+                    if (data == 'bgapi originate \nJob-UUID: jobid\n\n') {
+                        conn.emit('esl::event::BACKGROUND_JOB::jobid', 'event');
+                    }
+                })
+
+                conn.bgapi('originate', '', 'jobid', function(response) {
+                    expect(response).to.be.equal('event')
+                    done()
+                })
+
+            });
+
+            it('should get the correct response for each call if called twice', function(done) {
+                conn.socket.on('data', function(data) {
+                    data = data.toString('utf8');
+                    if (data == 'bgapi originate1 \nJob-UUID: jobid1\n\n') {
+                        setTimeout(function() {
+                            conn.emit('esl::event::BACKGROUND_JOB::jobid1', 'originate1');
+                        }, 800);
+                        
+                    } else if (data == 'bgapi originate2 \nJob-UUID: jobid2\n\n') {
+                        conn.emit('esl::event::BACKGROUND_JOB::jobid2', 'originate2');
+                    }
+                })
+
+                conn.bgapi('originate1', '', 'jobid1', function(response) {
+                    expect(response).to.be.equal('originate1')
+                })
+                setTimeout(function() {
+                    conn.bgapi('originate2', '', 'jobid2', function(response) {
+                        expect(response).to.be.equal('originate2')
+                        done()
+                    })
+                }, 300)
+                
+
+            });
+        });
+
+
         after(function() {
             conn.disconnect();
             serverSocket.close();

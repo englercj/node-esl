@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "target": "es2015",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "declaration": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "sourceMap": false,
+        "strict": true
+    },
+    "include": [
+        "src/typings/**/*.d.ts",
+        "src/**/*.ts"
+    ],
+    "typedocOptions": {
+        "out": "docs",
+        "mode": "modules",
+        "excludeExternals": true,
+        "excludePrivate": true,
+        "module": "commonjs",
+        "target": "es2015"
+    }
+}

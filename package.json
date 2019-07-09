@@ -1,49 +1,58 @@
 {
   "name": "modesl",
-  "version": "1.2.1",
+  "version": "2.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "description": "FreeSWITCH ESL Node.js Implementation",
   "author": "Chad Engler <chad@pantherdev.com>",
-  "keywords": [
-    "freeswitch",
-    "api",
-    "wrapper",
-    "esl",
-    "event",
-    "socket",
-    "library"
-  ],
+  "license": "MIT",
   "homepage": "https://github.com/englercj/node-esl",
   "bugs": "https://github.com/englercj/node-esl/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/englercj/node-esl.git"
   },
-  "main": "lib/index",
+  "keywords": [
+    "freeswitch",
+    "fsw",
+    "esl",
+    "event socket",
+    "event socket library"
+  ],
+  "files": [
+    "dist/",
+    "src/",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc --watch --preserveWatchOutput -p tsconfig.json",
+    "docs": "typedoc ./src",
+    "prepublishOnly": "npm run build",
+    "postpublish": "npm run deploy",
+    "predeploy": "rimraf ./docs && npm run docs && touch ./docs/.nojekyll",
+    "deploy": "gh-pages --dotfiles -d docs"
+  },
   "dependencies": {
-    "eventemitter2": "^4.1",
-    "uuid": "^3.1.0",
+    "eventemitter2": "^5.0.1",
+    "uuid": "^3.3.2",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-mocha-cov": "^0.4.0",
-    "mocha-term-cov-reporter": "^0.2.3",
-    "chai": "^4.1.2",
-    "sinon": "^3.2.1",
-    "sinon-chai": "^2.13.0"
-  },
-  "scripts": {
-    "test": "grunt test"
-  },
-  "engines": {
-    "node": ">=1.x"
-  },
-  "config": {
-    "blanket": {
-      "pattern": [
-        "node-esl/lib"
-      ]
-    }
+    "@types/node": "^12.0.12",
+    "@types/uuid": "^3.4.5",
+    "@types/xml2js": "^0.4.4",
+    "cross-env": "^5.2.0",
+    "gh-pages": "^2.0.1",
+    "rollup": "^1.16.6",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "rollup-plugin-typescript2": "^0.21.2",
+    "typedoc": "^0.14.2",
+    "typedoc-md-theme": "^1.0.1",
+    "typescript": "^3.5.2"
   }
 }

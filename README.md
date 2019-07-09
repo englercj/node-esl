@@ -2,14 +2,12 @@
 
 A Library for handling low-level FreeSWITCH ESLconnections, and associated ESLevents.
 
-[Documentation](https://github.com/englercj/node-esl/wiki) - [Event Socket Library Spec](http://wiki.freeswitch.org/wiki/Esl)
+[Documentation](https://github.com/englercj/node-esl/wiki) - [Event Socket Library Spec](https://freeswitch.org/confluence/x/UgEQ)
 
 ### Purpose
 
-Though there is already a Node.js "library" for this [on github](https://github.com/shimaore/esl),
-it does not actually implement the [Event Socket Library](http://wiki.freeswitch.org/wiki/Event_Socket_Library)
-interface, and instead has it's own thing. This library was written to implement the full Event
-Socket Library interface, and provide a meaningful semantic when dealing with FreeSWITCH in Node.js.
+This library was written to implement the full Event Socket Library interface, and provide a meaningful
+semantic when dealing with FreeSWITCH in Node.js.
 
 This library supports both "Inbound" (connection going _into_ FreeSWITCH) and "Outbound" (connections
 coming _out_ of FreeSWITCH). Also included is a helper `esl.Server` object that manages multiple
@@ -29,10 +27,13 @@ As in "Mod ESL".
 
 The most basic usage example is to open a connection, and send a status command:
 
-```javascript
-var esl = require('modesl'),
-conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
-    conn.api('status', function(res) {
+```js
+const esl = require('modesl'),
+
+const conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function ()
+{
+    conn.api('status', function (res)
+    {
         //res is an esl.Event instance
         console.log(res.getBody());
     });
@@ -53,24 +54,6 @@ The body for the same command issued with `api` and `bgapi` should be the same; 
 time it takes for the callback to execute are different. The Library attempts to smooth these differences out by providing
 a common interface, even though behind the scenes things are quite different.
 
-### Tests
-
-To run the tests included with the module simply run the following in the root of the `modesl` folder:
-
-```shell
-npm test
-```
-
-### TODO
-
- - Add tests for
-  * `esl.Connection`
- - Add more examples for
-  * IVR App
-  * Faxing App
- - Add more abstraction/sugar functions
- - Better error messages on `error` event
-
 ### License
 
-This module is distributed under the [Mozilla Public License 2.0](http://www.mozilla.org/MPL/2.0/).
+This module is distributed under the [MIT License](https://opensource.org/licenses/MIT).

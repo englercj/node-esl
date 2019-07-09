@@ -1,18 +1,21 @@
+sudo: false
+
 language: node_js
+
 node_js:
-    - "0.10"
+    - '12'
 
 branches:
     only:
         - master
 
-install:
-    - npm install grunt-cli
-    - npm install
-
 cache:
     directories:
         - node_modules
 
+install:
+    - npm install
+
 script:
-    - ./node_modules/.bin/grunt travis
+  - npm run build
+  - npm test

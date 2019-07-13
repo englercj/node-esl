@@ -8,12 +8,12 @@ import { IHeadersMap, HeaderNames } from './Parser';
  */
 export class Event
 {
-    private headers: IHeadersMap = {};
-    private type: string;
-    private subclass: string;
-    private body: string;
+    private _headers: IHeadersMap = {};
+    private _type: string;
+    private _subclass: string;
+    private _body: string;
 
-    private hPtr = -1;
+    private _headerIndex = -1;
 
     constructor(headers: IHeadersMap, body?: string);
     constructor(type: string, subclass?: string);
@@ -21,23 +21,23 @@ export class Event
     {
         if (typeof typeOrHeaders === 'string')
         {
-            this.type = typeOrHeaders;
-            this.subclass = subclassOrBody || '';
-            this.body = '';
+            this._type = typeOrHeaders;
+            this._subclass = subclassOrBody || '';
+            this._body = '';
 
-            this.addHeader(HeaderNames.EventName, this.type);
+            this.addHeader(HeaderNames.EventName, this._type);
 
-            if (this.subclass)
-                this.addHeader(HeaderNames.EventSubclass, this.subclass);
+            if (this._subclass)
+                this.addHeader(HeaderNames.EventSubclass, this._subclass);
         }
         else
         {
-            this.type = typeOrHeaders[HeaderNames.EventName] || '';
-            this.subclass = typeOrHeaders[HeaderNames.EventSubclass] || '';
-            this.body = this.subclass || typeOrHeaders._body || subclassOrBody || '';
+            this._type = typeOrHeaders[HeaderNames.EventName] || '';
+            this._subclass = typeOrHeaders[HeaderNames.EventSubclass] || '';
+            this._body = subclassOrBody || typeOrHeaders._body || '';
 
-            this.headers = typeOrHeaders;
-            delete this.headers._body;
+            this._headers = typeOrHeaders;
+            delete this._headers._body;
         }
     }
 
@@ -81,12 +81,12 @@ export class Event
             */
             case 'json':
             {
-                const obj = Object.assign({}, this.headers);
+                const obj = Object.assign({}, this._headers);
 
-                if (this.body)
+                if (this._body)
                 {
-                    obj[HeaderNames.ContentLength] = Buffer.byteLength(this.body, 'utf8').toString();
-                    obj._body = this.body;
+                    obj[HeaderNames.ContentLength] = Buffer.byteLength(this._body, 'utf8').toString();
+                    obj._body = this._body;
                 }
 
                 return JSON.stringify(obj, null, 4);
@@ -121,20 +121,20 @@ export class Event
             case 'plain':
             {
                 let output = '';
-                const keys = Object.keys(this.headers);
+                const keys = Object.keys(this._headers);
 
                 for (let i = 0; i < keys.length; ++i)
                 {
                     const key = keys[i];
-                    const value = this.headers[key];
+                    const value = this._headers[key];
                     output += `${key}: ${value}\n`;
                 }
 
-                if (this.body)
+                if (this._body)
                 {
-                    const bodyLen = Buffer.byteLength(this.body, 'utf8');
+                    const bodyLen = Buffer.byteLength(this._body, 'utf8');
                     output += `${HeaderNames.ContentLength}: ${bodyLen}\n\n`;
-                    output += this.body;
+                    output += this._body;
                 }
 
                 return output;
@@ -174,7 +174,7 @@ export class Event
             case 'xml':
             {
                 let output = '';
-                const keys = Object.keys(this.headers);
+                const keys = Object.keys(this._headers);
 
 
                 output += '<event>\n';
@@ -183,14 +183,14 @@ export class Event
                 for (let i = 0; i < keys.length; ++i)
                 {
                     const key = keys[i];
-                    const value = this.headers[key];
+                    const value = this._headers[key];
                     const encodedValue = typeof value === 'string' ? encodeXml(value) : value;
                     output += `        <${key}>${encodedValue}</${key}>\n`;
                 }
 
-                if (this.body)
+                if (this._body)
                 {
-                    const xmlEncodedBody = encodeXml(this.body);
+                    const xmlEncodedBody = encodeXml(this._body);
                     const key = HeaderNames.ContentLength;
                     const value = Buffer.byteLength(xmlEncodedBody, 'utf8');
                     output += `        <${key}>${value}</${key}>\n`;
@@ -224,7 +224,7 @@ export class Event
      */
     getHeader(name: string): string | null
     {
-        return this.headers[name] || null;
+        return this._headers[name] || null;
     }
 
     /**
@@ -232,7 +232,7 @@ export class Event
      */
     getBody(): string
     {
-        return this.body;
+        return this._body;
     }
 
     /**
@@ -240,7 +240,7 @@ export class Event
      */
     getType(): string
     {
-        return this.type;
+        return this._type;
     }
 
     /**
@@ -251,7 +251,7 @@ export class Event
      */
     addBody(value: string): string
     {
-        return this.body += value;
+        return this._body += value;
     }
 
     /**
@@ -261,7 +261,7 @@ export class Event
      */
     addHeader(name: string, value: string): void
     {
-        this.headers[name] = value;
+        this._headers[name] = value;
     }
 
     /**
@@ -269,7 +269,7 @@ export class Event
      */
     delHeader(name: string): void
     {
-        delete this.headers[name];
+        delete this._headers[name];
     }
 
     /**
@@ -280,9 +280,9 @@ export class Event
      */
     firstHeader(): string | null
     {
-        this.hPtr = 0;
+        this._headerIndex = 0;
 
-        const keys = Object.keys(this.headers);
+        const keys = Object.keys(this._headers);
 
         if (keys.length === 0)
             return null;
@@ -299,20 +299,20 @@ export class Event
     nextHeader(): string | null
     {
         // if no firstHeader called yet
-        if (this.hPtr === -1)
+        if (this._headerIndex === -1)
             return null;
 
-        const keys = Object.keys(this.headers);
+        const keys = Object.keys(this._headers);
 
         // if reached end
-        if (this.hPtr === (keys.length - 1))
+        if (this._headerIndex === (keys.length - 1))
         {
-            this.hPtr = -1;
+            this._headerIndex = -1;
             return null;
         }
 
-        ++this.hPtr;
+        ++this._headerIndex;
 
-        return keys[this.hPtr];
+        return keys[this._headerIndex];
     }
 }

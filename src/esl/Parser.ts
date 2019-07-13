@@ -19,7 +19,7 @@ export type IHeadersMap = Partial<{ [key: string]: string }>;
 
 export class Parser extends EventEmitter2
 {
-    buffer = new Buffer([]);
+    buffer = Buffer.alloc(0);
 
     private _bodyLen = 0;
     private _encoding = 'utf8';
@@ -81,7 +81,7 @@ export class Parser extends EventEmitter2
             const start = headerEnd + 2;
             const end = start + len;
 
-            if (end >= text.length)
+            if (end > text.length)
                 error = new Error('Invalid content length for plain body.');
             else
                 headers._body = text.substring(start, end);

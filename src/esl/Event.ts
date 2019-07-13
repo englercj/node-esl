@@ -39,14 +39,20 @@ export class Event
             this._headers = typeOrHeaders;
             delete this._headers._body;
         }
+
+        this.delHeader('Content-Length');
     }
+
+    get type() { return this._type; }
+    get body() { return this._body; }
+    get headers(): Readonly<IHeadersMap> { return this._headers; }
 
     /**
      * Turns an event into colon-separated 'name: value'
      * pairs similar to a sip/email packet
      * (the way it looks on '/events plain all').
      */
-    serialize(format: IFormat = 'plain'): string
+    serialize(format: IFormat = 'json'): string
     {
         switch (format)
         {
@@ -126,6 +132,10 @@ export class Event
                 for (let i = 0; i < keys.length; ++i)
                 {
                     const key = keys[i];
+
+                    if (key === 'Content-Length')
+                        continue;
+
                     const value = this._headers[key];
                     output += `${key}: ${value}\n`;
                 }
@@ -176,13 +186,16 @@ export class Event
                 let output = '';
                 const keys = Object.keys(this._headers);
 
-
                 output += '<event>\n';
                 output += '    <headers>\n';
 
                 for (let i = 0; i < keys.length; ++i)
                 {
                     const key = keys[i];
+
+                    if (key === 'Content-Length')
+                        continue;
+
                     const value = this._headers[key];
                     const encodedValue = typeof value === 'string' ? encodeXml(value) : value;
                     output += `        <${key}>${encodedValue}</${key}>\n`;

@@ -89,7 +89,7 @@ export const eventXml = [
 
 export const eventJsonBad = '{ herp: derp }';
 export const eventXmlBad = '<herp|&"derp<//>>';
-export const channelData = [
+export const eventChannelData = [
     'Channel-Username: 1001',
     'Channel-Dialplan: XML',
     'Channel-Caller-ID-Name: 1001',
@@ -143,7 +143,7 @@ export const channelData = [
     '',
 ].join('\n');
 
-export function cmdReply(msg, err)
+export function cmdReply(msg?: string, err: boolean = false)
 {
     return [
         'Content-Type: command/reply',

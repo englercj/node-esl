@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 describe('Event Socket Library', function()
 {
-    it('should have the correct exports', function()
+    it('Has the correct exports', function()
     {
         expect(esl.setLogLevel).to.be.a('function');
         expect(esl.eslSetLogLevel).to.be.a('function');

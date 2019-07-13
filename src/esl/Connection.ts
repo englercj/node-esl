@@ -4,7 +4,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { Event } from './Event';
 import { Parser, HeaderNames } from './Parser';
 import { ICallback, IFormat, isValidFormat, IErrorCallback, IDictionary } from '../utils';
-import { log } from '../logger';
+import { logger } from '../logger';
 
 export type IConnectionReadyCallback = ICallback<void>;
 export type IEventCallback = ICallback<Event>;
@@ -71,20 +71,19 @@ export class Connection extends EventEmitter2
 {
     execAsync = false;
     execLock = false;
-    connecting = true;
-    authed = false;
-    usingFilters = false;
-    channelData: Event | null = null;
-    cmdCallbackQueue: (IEventCallback | undefined)[] = [];
-    apiCallbackQueue: (IEventCallback | undefined)[] = [];
-
-    password = '';
 
     readonly type: ConnectionType;
 
     private _socket: net.Socket;
     private _reqEvents: string[];
     private _parser: Parser | null;
+
+    private _authed = false;
+    private _connecting = true;
+    private _usingFilters = false;
+    private _channelData: Event | null = null;
+    private _cmdCallbackQueue: (IEventCallback | undefined)[] = [];
+    private _apiCallbackQueue: (IEventCallback | undefined)[] = [];
 
     constructor(socket: net.Socket, type: ConnectionType, readyCallback?: IConnectionReadyCallback)
     {
@@ -137,16 +136,16 @@ export class Connection extends EventEmitter2
         // Handle logdata events
         this.on('esl::event::logdata', function (event: Event)
         {
-            log(event);
+            logger.log(event);
         });
 
         // Handle command reply callbacks
         this.on('esl::event::command::reply', (event: Event) =>
         {
-            if (this.cmdCallbackQueue.length === 0)
+            if (this._cmdCallbackQueue.length === 0)
                 return;
 
-            const fn = this.cmdCallbackQueue.shift();
+            const fn = this._cmdCallbackQueue.shift();
 
             if (fn && typeof fn === 'function')
                 fn.call(this, event);
@@ -155,10 +154,10 @@ export class Connection extends EventEmitter2
         // Handle api response callbacks
         this.on('esl::event::api::response', (event: Event) =>
         {
-            if (this.apiCallbackQueue.length === 0)
+            if (this._apiCallbackQueue.length === 0)
                 return;
 
-            const fn = this.apiCallbackQueue.shift();
+            const fn = this._apiCallbackQueue.shift();
 
             if (fn && typeof fn === 'function')
                 fn.call(self, event);
@@ -168,8 +167,14 @@ export class Connection extends EventEmitter2
     static createInbound(host: string, port: number, password: string, readyCallback?: IConnectionReadyCallback): Connection
     {
         const socket = net.connect({ host, port });
+        const conn = new Connection(socket, ConnectionType.Inbound, readyCallback);
 
-        return new Connection(socket, ConnectionType.Inbound, readyCallback);
+        conn.on('esl::event::auth::request', function ()
+        {
+            conn.auth(password);
+        });
+
+        return conn;
     }
 
     static createOutbound(socket: net.Socket, readyCallback?: IConnectionReadyCallback): Connection
@@ -177,7 +182,9 @@ export class Connection extends EventEmitter2
         return new Connection(socket, ConnectionType.Outbound, readyCallback);
     }
 
-    // get socket() { return this._socket; }
+    get authed() { return this._authed; }
+    get connecting() { return this._connecting; }
+    get socket() { return this._socket; }
 
     /**
      * Lower-level ESL Specification
@@ -194,7 +201,7 @@ export class Connection extends EventEmitter2
     /**
      * Test if the connection object is connected. Returns `true` if connected, `false` otherwise.
      */
-    connected() { return (!this.connecting && !!this._socket); }
+    connected() { return (!this._connecting && !!this._socket); }
 
     /**
      * When FS connects to an "Event Socket Outbound" handler, it sends
@@ -203,7 +210,7 @@ export class Connection extends EventEmitter2
      *
      * getInfo() returns `null` when used on an `Inbound` connection.
      */
-    getInfo() { return this.channelData; }
+    getInfo() { return this._channelData; }
 
     /**
      * Sends a command to FreeSWITCH.
@@ -272,7 +279,7 @@ export class Connection extends EventEmitter2
             args = argsOrCallback;
         }
 
-        this.cmdCallbackQueue.push(cb);
+        this._cmdCallbackQueue.push(cb);
 
         this.send(command, args);
     }
@@ -303,7 +310,7 @@ export class Connection extends EventEmitter2
             args = argsOrCallback;
         }
 
-        this.apiCallbackQueue.push(cb);
+        this._apiCallbackQueue.push(cb);
 
         if (args)
         {
@@ -354,7 +361,7 @@ export class Connection extends EventEmitter2
             command += ` ${args}`;
         }
 
-        if (this.usingFilters)
+        if (this._usingFilters)
         {
             this._sendApiCommand(
                 command,
@@ -391,7 +398,7 @@ export class Connection extends EventEmitter2
      */
     filter(header: string, value: string, cb?: IEventCallback): void
     {
-        this.usingFilters = true;
+        this._usingFilters = true;
         this.sendRecv(`filter ${header} ${value}`, cb);
     }
 
@@ -510,9 +517,9 @@ export class Connection extends EventEmitter2
         {
             return this._sendExecute(uniqueId, options, cb);
         }
-        else if (this.channelData)
+        else if (this._channelData)
         {
-            const infoUniqueId = this.channelData.getHeader('Unique-ID');
+            const infoUniqueId = this._channelData.getHeader('Unique-ID');
 
             if (infoUniqueId)
                 return this._sendExecute(infoUniqueId, options, cb);
@@ -600,7 +607,7 @@ export class Connection extends EventEmitter2
         {
             if (event.getHeader('Modesl-Reply-OK') === 'accepted')
             {
-                this.authed = true;
+                this._authed = true;
 
                 this.subscribe(this._reqEvents);
 
@@ -612,7 +619,7 @@ export class Connection extends EventEmitter2
             }
             else
             {
-                this.authed = false;
+                this._authed = false;
                 this.emit('esl::event::auth::fail', event);
 
                 if (cb)
@@ -787,10 +794,8 @@ export class Connection extends EventEmitter2
         this._parser.on('esl::event', this._onEvent.bind(this));
         this._parser.on('error', (err: Error) => this.emit('error', err));
 
-        this.connecting = false;
+        this._connecting = false;
         this.emit('esl::connect');
-
-        this.on('esl::event::auth::request', this.auth.bind(this));
     }
 
     /**
@@ -817,7 +822,7 @@ export class Connection extends EventEmitter2
                 {
                     if (this.type === ConnectionType.Outbound)
                     {
-                        this.channelData = event;
+                        this._channelData = event;
                         this.emit('esl::event::CHANNEL_DATA' + (!!uniqueId ? '::' + uniqueId : ''), event);
                     }
                 }

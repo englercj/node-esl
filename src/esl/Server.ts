@@ -36,8 +36,8 @@ export class Server extends EventEmitter2
      * @param [opts] Options for the server.
      * @param [readyCb] Callback to be called when the server is ready to accept connections.
      */
-    constructor();
-    constructor(readyCb: IServerReadyCallback);
+    constructor(readyCb?: IServerReadyCallback);
+    constructor(options: IServerOptions, readyCb?: IServerReadyCallback);
     constructor(opts?: IServerOptions | IServerReadyCallback, readyCb?: IServerReadyCallback)
     {
         super({
@@ -76,6 +76,11 @@ export class Server extends EventEmitter2
             this.server = net.createServer(this._onConnection.bind(this));
             this.server.listen(port, host, () => this.emit('ready'));
         }
+    }
+
+    bindEventsEnabled()
+    {
+        return this._bindEvents;
     }
 
     close(callback?: (err?: Error | undefined) => void)

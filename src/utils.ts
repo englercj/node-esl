@@ -1,5 +1,6 @@
 export type ICallback<T> = (arg: T) => void;
-export type IErrorCallback<T> = (err: Error | null, arg?: T) => void;
+export type IErrorCallback<T> = (err: Error | null, result?: T) => void;
+
 export type IDictionary<T> = Partial<{ [key: string]: T }>;
 
 export function encodeXml(str: string): string

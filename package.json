@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "watch": "tsc --watch --preserveWatchOutput -p tsconfig.json",
-    "test": "mocha -r ts-node/register test/spec/index.test.ts",
+    "test": "mocha -r ts-node/register test/spec/**/*.test.ts",
     "docs": "typedoc ./src",
     "prepublishOnly": "npm run build",
     "postpublish": "npm run deploy",
@@ -62,5 +62,8 @@
     "typedoc": "^0.14.2",
     "typedoc-md-theme": "^1.0.1",
     "typescript": "^3.5.2"
+  },
+  "engines": {
+    "node": ">=8.x"
   }
 }

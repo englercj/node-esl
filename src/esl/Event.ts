@@ -94,6 +94,10 @@ export class Event
                     obj[HeaderNames.ContentLength] = Buffer.byteLength(this._body, 'utf8').toString();
                     obj._body = this._body;
                 }
+                else
+                {
+                    delete obj[HeaderNames.ContentLength];
+                }
 
                 return JSON.stringify(obj, null, 4);
             }

@@ -1,4 +1,5 @@
 import * as net from 'net';
+import * as uuid from 'uuid';
 import { expect } from 'chai';
 import { getEchoServerAndSocket, getInboundConnection, ITestSendArgs } from '../../fixtures/helpers';
 import { Connection } from '../../../src/esl/Connection';
@@ -116,14 +117,14 @@ describe('esl.Connection', function ()
             });
         });
 
-        describe.skip('.execute()', function ()
+        describe('.execute()', function ()
         {
-            const uuid = 'f6a2ae66-2a0d-4ede-87ae-1da2ef25ada5';
-            const uuid2 = 'a5eac28e-b623-463d-87ad-b9de90afaf33';
+            const id0 = uuid.v4();
+            const id1 = uuid.v4();
 
             it('Invokes the callback', function (done)
             {
-                testChannelExecute(testConnection, 'playback', 'foo', uuid, function (evt)
+                testChannelExecute(testConnection, 'playback', 'foo', id0, function (evt)
                 {
                     expect(evt.getHeader('Application')).to.equal('playback');
                     done();
@@ -132,7 +133,7 @@ describe('esl.Connection', function ()
 
             it('Invokes the callback only once for the same session', function (done)
             {
-                testChannelExecute(testConnection, 'hangup', '', uuid, function (evt)
+                testChannelExecute(testConnection, 'hangup', '', id0, function (evt)
                 {
                     expect(evt.getHeader('Application')).to.equal('hangup');
                     done();
@@ -141,7 +142,7 @@ describe('esl.Connection', function ()
 
             it('Invokes the callback again for a new session', function (done)
             {
-                testChannelExecute(testConnection, 'hangup', '', uuid2, function (evt)
+                testChannelExecute(testConnection, 'hangup', '', id1, function (evt)
                 {
                     expect(evt.getHeader('Application')).to.equal('hangup');
                     done();
@@ -209,12 +210,12 @@ function testConnectionSend(done: Mocha.Done, conn: Connection, args: ITestSendA
     conn.send.apply(conn, args);
 }
 
-function sendChannelExecuteResponse(conn: Connection, appUuid: string, appName: string, appArg: string, uuid: string)
+function sendChannelExecuteResponse(conn: Connection, appUuid: string, appName: string, uniqueId: string)
 {
     // condensed output from FreeSWITCH to test relevant parts.
     const resp = [
         'Event-Name: CHANNEL_EXECUTE_COMPLETE',
-        'Unique-ID: ' + uuid,
+        'Unique-ID: ' + uniqueId,
         'Application: ' + appName,
         'Application-Response: _none_',
         'Application-UUID: ' + appUuid,
@@ -227,27 +228,40 @@ function sendChannelExecuteResponse(conn: Connection, appUuid: string, appName: 
     conn.socket.write(resp);
 }
 
-function testChannelExecute(conn: Connection, appName: string, appArg: string, uuid: string, cb: ICallback<Event>)
+function testChannelExecute(conn: Connection, appName: string, appArg: string, requestId: string, cb: ICallback<Event>)
 {
     conn.socket.once('data', function (data)
     {
         const str = data.toString('utf8');
         const lines = str.split('\n');
 
+        expect(lines).to.contain(`sendmsg ${requestId}`);
         expect(lines).to.contain('call-command: execute');
-        expect(lines).to.contain('execute-app-name: ' + appName);
-        expect(lines).to.contain('execute-app-arg: ' + appArg);
+        expect(lines).to.contain(`execute-app-name: ${appName}`);
+        expect(lines.some(x => x.includes('Event-UUID: '))).to.be.true;
+
+        if (appArg)
+        {
+            expect(lines).to.contain(`execute-app-arg: ${appArg}`);
+        }
+        else
+        {
+            expect(lines).to.not.contain('execute-app-arg: ');
+            expect(lines).to.not.contain('execute-app-arg: undefined');
+            expect(lines).to.not.contain('execute-app-arg: null');
+            expect(lines).to.not.contain('execute-app-arg: [object Object]');
+        }
 
         // first send an unrelated message that should not be picked up.
-        const otherUuid = 'fee64ea1-c11d-4a1b-9715-b755fed7a557';
-        sendChannelExecuteResponse(conn, otherUuid, 'sleep', '1', uuid);
+        const otherUuid = uuid.v4();
+        sendChannelExecuteResponse(conn, otherUuid, 'sleep', requestId);
 
         const match = /\nEvent-UUID: ([0-9a-f-]+)\n/.exec(str);
         const appUuid = match && match[1];
 
         if (appUuid)
-            sendChannelExecuteResponse(conn, appUuid, appName, appArg, uuid);
+            sendChannelExecuteResponse(conn, appUuid, appName, requestId);
     });
 
-    conn.execute(appName, appArg, uuid, cb);
+    conn.execute(appName, appArg, requestId, cb);
 }

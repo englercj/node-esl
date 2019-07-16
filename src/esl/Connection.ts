@@ -171,7 +171,7 @@ export class Connection extends EventEmitter2
             const fn = this._apiCallbackQueue.shift();
 
             if (fn && typeof fn === 'function')
-                fn.call(self, event);
+                fn.call(this, event);
         });
     }
 

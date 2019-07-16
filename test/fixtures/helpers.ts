@@ -29,7 +29,6 @@ export interface ITestServerOptions
 {
     port?: number;
     host?: string;
-    server?: net.Server;
 }
 
 export function getServer(cb: IErrorCallback<net.Server>): void;
@@ -52,24 +51,25 @@ export function getServer(optionsOrCallback: ITestServerOptions | IErrorCallback
     const options: Required<ITestServerOptions> = {
         port: optionsArg.port || 8000,
         host: optionsArg.host || '',
-        server: optionsArg.server || net.createServer(),
     };
+
+    const server = net.createServer();
 
     const onListen = function ()
     {
-        options.server.removeListener('error', onError);
+        server.removeListener('error', onError);
 
-        cb(null, options.server);
+        cb(null, server);
     }
 
     const onError = function (err: NodeJS.ErrnoException)
     {
-        options.server.removeListener('listening', onListen);
+        server.removeListener('listening', onListen);
+        server.close();
 
         if (err.code !== 'EADDRINUSE' && err.code !== 'EACCES')
         {
             cb(err);
-
             return;
         }
 
@@ -77,9 +77,9 @@ export function getServer(optionsOrCallback: ITestServerOptions | IErrorCallback
         getServer(options, cb);
     }
 
-    options.server.once('error', onError);
-    options.server.once('listening', onListen);
-    options.server.listen(options.port, options.host);
+    server.once('error', onError);
+    server.once('listening', onListen);
+    server.listen(options.port, options.host);
 }
 
 export function getEchoServer(cb: IErrorCallback<net.Server>): void

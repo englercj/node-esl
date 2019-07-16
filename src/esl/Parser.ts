@@ -147,14 +147,14 @@ export class Parser extends EventEmitter2
     private _parseHeaders()
     {
         // get end of header marker
-        var headEnd = this._indexOfHeaderEnd();
+        const headEnd = this._indexOfHeaderEnd();
 
         // if the headers haven't ended yet, keep buffering
         if (headEnd === -1)
             return;
 
         // if the headers have ended pull out the header text
-        var headText = this.buffer.toString(this._encoding, 0, headEnd);
+        const headText = this.buffer.toString(this._encoding, 0, headEnd);
 
         // remove header text from buffer
         this.buffer = this.buffer.slice(headEnd + 2);

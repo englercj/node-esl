@@ -175,9 +175,14 @@ export class Connection extends EventEmitter2
         });
     }
 
-    static createInbound(host: string, port: number, password: string, readyCallback?: IConnectionReadyCallback): Connection
+    static createInbound(options: net.NetConnectOpts, password: string, readyCallback?: IConnectionReadyCallback): Connection;
+    static createInbound(socket: net.Socket, password: string, readyCallback?: IConnectionReadyCallback): Connection;
+    static createInbound(
+        optionsOrSocket: net.NetConnectOpts | net.Socket,
+        password: string,
+        readyCallback?: IConnectionReadyCallback): Connection
     {
-        const socket = net.connect({ host, port });
+        const socket = optionsOrSocket instanceof net.Socket ? optionsOrSocket : net.connect(optionsOrSocket);
         const conn = new Connection(socket, ConnectionType.Inbound, readyCallback);
 
         conn.on('esl::event::auth::request', function ()

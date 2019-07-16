@@ -123,27 +123,28 @@ describe('esl.Server', function ()
 
 function testServerEvent(done: Mocha.Done, server: Server, name: string, channelData?: string)
 {
-    let timeout: any;
-
-    server.once(name, function(c, id)
-    {
-        clearTimeout(timeout);
-
-        expect(id).to.not.be.null;
-        done();
-    });
-
-    timeout = setTimeout(function ()
-    {
-        done(new Error("Connection Timeout"));
-    }, 1500);
-
     const address = server.server.address();
 
     if (!address || typeof address === 'string')
         return done(new Error('Failed to read address of server.'));
 
     const socket = net.connect({ port: address.port });
+
+    const timeout = setTimeout(function ()
+    {
+        socket.end();
+        done(new Error("Connection Timeout"));
+    }, 1500);
+
+    server.once(name, function(c, id)
+    {
+        clearTimeout(timeout);
+
+        expect(id).to.not.be.null;
+
+        socket.end();
+        done();
+    });
 
     if (channelData)
     {
@@ -160,13 +161,11 @@ function testServerEvent(done: Mocha.Done, server: Server, name: string, channel
                 else if (str.indexOf('myevents') !== -1)
                 {
                     socket.write(channelData + '\n');
-                    socket.end();
                 }
             }
             else if (str.indexOf('connect') !== -1)
             {
                 socket.write(channelData + '\n');
-                socket.end();
             }
         });
     }

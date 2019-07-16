@@ -10,7 +10,7 @@ describe('esl.Server', function ()
     {
         expect(Server).to.be.a('function');
 
-        var server = new Server();
+        const server = new Server();
 
         testServerInstance(server);
 
@@ -23,7 +23,7 @@ describe('esl.Server', function ()
 
     it('Constructs with only a callback set', function (done)
     {
-        var server = new Server(function ()
+        const server = new Server(function ()
         {
             server.close();
             done();
@@ -143,7 +143,7 @@ function testServerEvent(done: Mocha.Done, server: Server, name: string, channel
     if (!address || typeof address === 'string')
         return done(new Error('Failed to read address of server.'));
 
-    var socket = net.connect({ port: address.port });
+    const socket = net.connect({ port: address.port });
 
     if (channelData)
     {

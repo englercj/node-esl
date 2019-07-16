@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { eventJson, eventPlain, eventXml } from '../../fixtures/data';
-import { encodeXml } from '../../../src/utils';
 import { Event } from '../../../src/esl/Event';
 
 const heads = JSON.parse(eventJson);

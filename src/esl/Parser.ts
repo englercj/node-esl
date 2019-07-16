@@ -1,5 +1,4 @@
 import * as net from 'net';
-import * as uuid from 'uuid';
 import * as xml2js from 'xml2js';
 import { Buffer } from 'buffer';
 import { EventEmitter2 } from 'eventemitter2';
@@ -13,6 +12,12 @@ export enum HeaderNames
     EventName = 'Event-Name',
     EventSubclass = 'Event-Subclass',
     JobUuid = 'Job-UUID',
+}
+
+export enum ParserEvent
+{
+    Error = 'error',
+    Event = 'esl::event',
 }
 
 export type IHeadersMap = Partial<{ [key: string]: string }>;
@@ -209,7 +214,7 @@ export class Parser extends EventEmitter2
                 }
                 catch(e)
                 {
-                    this.emit('error', e);
+                    this.emit(ParserEvent.Error, e);
                     return;
                 }
                 break;
@@ -221,7 +226,7 @@ export class Parser extends EventEmitter2
                 const { error, headers } = Parser.parsePlainBody(body);
 
                 if (error)
-                    this.emit('error', error);
+                    this.emit(ParserEvent.Error, error);
 
                 data = headers;
 
@@ -234,7 +239,7 @@ export class Parser extends EventEmitter2
                 const { error, headers } = Parser.parseXmlBody(body);
 
                 if (error)
-                    this.emit('error', error);
+                    this.emit(ParserEvent.Error, error);
 
                 data = headers;
 
@@ -259,6 +264,6 @@ export class Parser extends EventEmitter2
                 event.addHeader('Modesl-Reply-OK', reply.substring(4));
         }
 
-        this.emit('esl::event', event, this._headers, body);
+        this.emit(ParserEvent.Event, event, this._headers, body);
     }
 }

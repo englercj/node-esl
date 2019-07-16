@@ -2,7 +2,7 @@ import * as net from 'net';
 import * as uuid from 'uuid';
 import { EventEmitter2 } from 'eventemitter2';
 import { Event } from './Event';
-import { Parser, HeaderNames } from './Parser';
+import { Parser, HeaderNames, ParserEvent } from './Parser';
 import { ICallback, IFormat, isValidFormat, IErrorCallback, IDictionary } from '../utils';
 import { logger } from '../logger';
 
@@ -802,8 +802,8 @@ export class Connection extends EventEmitter2
     {
         this._parser = new Parser(this._socket);
 
-        this._parser.on('esl::event', this._onEvent.bind(this));
-        this._parser.on('error', (err: Error) => this.emit(ConnectionEvent.Error, err));
+        this._parser.on(ParserEvent.Event, this._onEvent.bind(this));
+        this._parser.on(ParserEvent.Error, (err: Error) => this.emit(ConnectionEvent.Error, err));
 
         this._connecting = false;
         this.emit(ConnectionEvent.Connect);

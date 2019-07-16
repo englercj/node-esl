@@ -100,7 +100,6 @@ export class Server extends EventEmitter2
 
         conn.on(ConnectionEvent.Ready, () =>
         {
-            console.log("ESL-READY", this._bindEvents);
             if (this._bindEvents)
             {
                 conn.sendRecv('myevents', () =>

@@ -1,10 +1,14 @@
 import * as net from 'net';
 import * as uuid from 'uuid';
+import * as sinon from 'sinon';
 import { expect } from 'chai';
 import { getEchoServerAndSocket, getInboundConnection, ITestSendArgs } from '../../fixtures/helpers';
+import { setupSinonChai } from '../../fixtures/setup';
 import { Connection } from '../../../src/esl/Connection';
 import { ICallback } from '../../../src/utils';
 import { Event } from '../../../src/esl/Event';
+
+setupSinonChai();
 
 describe('esl.Connection', function ()
 {
@@ -148,7 +152,189 @@ describe('esl.Connection', function ()
                     done();
                 });
             });
+        });
 
+        describe('.api()', function ()
+        {
+            it('Call the callback when `esl::event::api::response comes`', function (done)
+            {
+                const stub = function (buffer: Buffer)
+                {
+                    const data = buffer.toString('utf8');
+
+                    if (data === 'api originate\n\n')
+                    {
+                        testConnection.emit('esl::event::api::response', 'event');
+                    }
+                };
+
+                testConnection.socket.on('data', stub);
+
+                testConnection.api('originate', function (response)
+                {
+                    expect(response).to.be.equal('event');
+                    testConnection.socket.off('data', stub);
+                    done();
+                });
+            });
+
+            it('Gets the correct response for each call if called twice immediately', function (done)
+            {
+                const stub = function (buffer: Buffer)
+                {
+                    const data = buffer.toString('utf8');
+
+                    if (data.indexOf('api originate1\n\n') !== -1)
+                        testConnection.emit('esl::event::api::response', 'originate1');
+
+                    if (data.indexOf('api originate2\n\n') !== -1)
+                        testConnection.emit('esl::event::api::response', 'originate2');
+                };
+
+                testConnection.socket.on('data', stub);
+
+                const testDone = function ()
+                {
+                    if (callback1.called && callback2.called)
+                    {
+                        testConnection.socket.off('data', stub);
+                        done();
+                    }
+                }
+
+                const callback1 = sinon.spy(function (response)
+                {
+                    expect(response).to.be.equal('originate1');
+                    expect(callback2).to.not.be.called;
+                    testDone();
+                });
+
+                const callback2 = sinon.spy(function (response)
+                {
+                    expect(response).to.be.equal('originate2');
+                    expect(callback1).to.be.called;
+                    testDone();
+                });
+
+                testConnection.api('originate1', callback1);
+                testConnection.api('originate2', callback2);
+            });
+
+            it('Gets the correct response for each call if called twice delayed', function (done)
+            {
+                const stub = function (buffer: Buffer)
+                {
+                    const data = buffer.toString('utf8');
+
+                    if (data.indexOf('api originate1\n\n') !== -1)
+                        testConnection.emit('esl::event::api::response', 'originate1');
+
+                    if (data.indexOf('api originate2\n\n') !== -1)
+                        testConnection.emit('esl::event::api::response', 'originate2');
+                };
+
+                testConnection.socket.on('data', stub);
+
+                const testDone = function ()
+                {
+                    if (callback1.called && callback2.called)
+                    {
+                        testConnection.socket.off('data', stub);
+                        done();
+                    }
+                }
+
+                const callback1 = sinon.spy(function (response)
+                {
+                    expect(response).to.be.equal('originate1');
+                    expect(callback2).to.not.be.called;
+                    testDone();
+                });
+
+                const callback2 = sinon.spy(function (response)
+                {
+                    expect(response).to.be.equal('originate2');
+                    expect(callback1).to.be.called;
+                    testDone();
+                });
+
+                testConnection.api('originate1', callback1);
+
+                setTimeout(function ()
+                {
+                    testConnection.api('originate2', callback2);
+                }, 20);
+            });
+        });
+
+        describe('.bgapi()', function ()
+        {
+            it('Calls the callback when `esl::event::BACKGROUND_JOB::<jobId>` comes', function (done)
+            {
+                const stub = function (buffer: Buffer)
+                {
+                    const data = buffer.toString('utf8');
+
+                    if (data === 'bgapi originate\nJob-UUID: jobid\n\n')
+                        testConnection.emit('esl::event::BACKGROUND_JOB::jobid', 'event');
+                };
+
+                testConnection.socket.on('data', stub);
+
+                testConnection.bgapi('originate', '', 'jobid', function (response)
+                {
+                    expect(response).to.be.equal('event');
+                    testConnection.socket.off('data', stub);
+                    done();
+                })
+            });
+
+            it('Gets the correct response for each call if called twice', function (done)
+            {
+                const stub = function (buffer: Buffer)
+                {
+                    const data = buffer.toString('utf8');
+
+                    if (data.indexOf('bgapi originate1\nJob-UUID: jobid1\n\n') !== -1)
+                    {
+                        setTimeout(function ()
+                        {
+                            testConnection.emit('esl::event::BACKGROUND_JOB::jobid1', 'originate1');
+                        }, 20);
+                    }
+
+                    if (data.indexOf('bgapi originate2\nJob-UUID: jobid2\n\n') !== -1)
+                        testConnection.emit('esl::event::BACKGROUND_JOB::jobid2', 'originate2');
+                };
+
+                testConnection.socket.on('data', stub);
+
+                const testDone = function ()
+                {
+                    if (callback1.called && callback2.called)
+                    {
+                        testConnection.socket.off('data', stub);
+                        done();
+                    }
+                }
+
+                const callback1 = sinon.spy(function (response)
+                {
+                    expect(response).to.be.equal('originate1');
+                    expect(callback2).to.be.called;
+                    testDone();
+                });
+
+                const callback2 = sinon.spy(function (response)
+                {
+                    expect(response).to.be.equal('originate2');
+                    expect(callback1).to.not.be.called;
+                    testDone();
+                });
+
+                testConnection.bgapi('originate1', '', 'jobid1', callback1);
+                testConnection.bgapi('originate2', '', 'jobid2', callback2);
+            });
         });
 
         after(function ()

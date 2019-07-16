@@ -126,7 +126,7 @@ export function getInboundConnection(cb: IErrorCallback<{ connection: Connection
         if (!address || typeof address === 'string')
             return cb(new Error('Failed to read echo server address'));
 
-        const connection = Connection.createInbound('localhost', address.port, 'ClueCon');
+        const connection = Connection.createInbound({ host: 'localhost', port: address.port }, 'ClueCon');
 
         cb(err, { connection, server });
     });

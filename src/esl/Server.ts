@@ -1,7 +1,7 @@
 import * as net from 'net';
 import * as uuid from 'uuid';
 import { EventEmitter2 } from 'eventemitter2';
-import { Connection, ConnectionType } from './Connection';
+import { Connection, ConnectionType, ConnectionEvent } from './Connection';
 import { ICallback, IDictionary } from '../utils';
 
 export type IServerReadyCallback = ICallback<void>;
@@ -19,6 +19,7 @@ export enum ServerEvent
     ConnectionOpen = 'connection::open',
     ConnectionReady = 'connection::ready',
     ConnectionClose = 'connection::close',
+    Ready = 'ready',
 }
 
 /**
@@ -54,7 +55,7 @@ export class Server extends EventEmitter2
 
         if (readyCb)
         {
-            this.once('ready', readyCb);
+            this.once(ServerEvent.Ready, readyCb);
         }
 
         this._bindEvents = opts && opts.myevents ? opts.myevents : false;
@@ -64,7 +65,7 @@ export class Server extends EventEmitter2
             this.server = opts.server;
 
             // make sure we dont call the callback before the function returns
-            process.nextTick(() => this.emit('ready'));
+            process.nextTick(() => this.emit(ServerEvent.Ready));
 
             this.server.on('connection', this._onConnection.bind(this));
         }
@@ -74,7 +75,7 @@ export class Server extends EventEmitter2
             const host = opts && opts.host ? opts.host : '127.0.0.1';
 
             this.server = net.createServer(this._onConnection.bind(this));
-            this.server.listen(port, host, () => this.emit('ready'));
+            this.server.listen(port, host, () => this.emit(ServerEvent.Ready));
         }
     }
 
@@ -97,7 +98,7 @@ export class Server extends EventEmitter2
 
         this.emit(ServerEvent.ConnectionOpen, conn, id);
 
-        conn.on('esl::ready', () =>
+        conn.on(ConnectionEvent.Ready, () =>
         {
             console.log("ESL-READY", this._bindEvents);
             if (this._bindEvents)

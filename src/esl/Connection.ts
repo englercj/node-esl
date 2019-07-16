@@ -34,6 +34,17 @@ export enum ConnectionType
     Inbound, // "Inbound" connection, going into FSW
 }
 
+export enum ConnectionEvent
+{
+    AuthSuccess = 'esl::event::auth::success',
+    AuthFail = 'esl::event::auth::fail',
+    Connect = 'esl::connect',
+    ChannelDataPrefix = 'esl::event::CHANNEL_DATA',
+    End = 'esl::end',
+    Error = 'error',
+    Ready = 'esl::ready',
+}
+
 //- function(host, port, password)
 //Initializes a new instance of ESLconnection, and connects to the
 // host $host on the port $port, and supplies $password to freeswitch.
@@ -99,7 +110,7 @@ export class Connection extends EventEmitter2
         this._parser = null;
 
         if (readyCallback)
-            this.once('esl::ready', readyCallback);
+            this.once(ConnectionEvent.Ready, readyCallback);
 
         if (type == ConnectionType.Inbound)
         {
@@ -116,7 +127,7 @@ export class Connection extends EventEmitter2
             {
                 this.subscribe(this._reqEvents, () =>
                 {
-                    this.emit('esl::ready');
+                    this.emit(ConnectionEvent.Ready);
                 });
             });
 
@@ -124,13 +135,13 @@ export class Connection extends EventEmitter2
 
         socket.on('error', (err: Error) =>
         {
-            this.emit('error', err);
+            this.emit(ConnectionEvent.Error, err);
         });
 
         // Emit end when stream closes
         socket.on('end', () =>
         {
-            this.emit('esl::end');
+            this.emit(ConnectionEvent.End);
         });
 
         // Handle logdata events
@@ -245,7 +256,7 @@ export class Connection extends EventEmitter2
         }
         catch (e)
         {
-            this.emit('error', e);
+            this.emit(ConnectionEvent.Error, e);
         }
     }
 
@@ -611,8 +622,8 @@ export class Connection extends EventEmitter2
 
                 this.subscribe(this._reqEvents);
 
-                this.emit('esl::event::auth::success', event);
-                this.emit('esl::ready');
+                this.emit(ConnectionEvent.AuthSuccess, event);
+                this.emit(ConnectionEvent.Ready);
 
                 if (cb)
                     cb(null, event);
@@ -620,7 +631,7 @@ export class Connection extends EventEmitter2
             else
             {
                 this._authed = false;
-                this.emit('esl::event::auth::fail', event);
+                this.emit(ConnectionEvent.AuthFail, event);
 
                 if (cb)
                     cb(new Error('Authentication Failed'), event);
@@ -792,10 +803,10 @@ export class Connection extends EventEmitter2
         this._parser = new Parser(this._socket);
 
         this._parser.on('esl::event', this._onEvent.bind(this));
-        this._parser.on('error', (err: Error) => this.emit('error', err));
+        this._parser.on('error', (err: Error) => this.emit(ConnectionEvent.Error, err));
 
         this._connecting = false;
-        this.emit('esl::connect');
+        this.emit(ConnectionEvent.Connect);
     }
 
     /**
@@ -823,7 +834,8 @@ export class Connection extends EventEmitter2
                     if (this.type === ConnectionType.Outbound)
                     {
                         this._channelData = event;
-                        this.emit('esl::event::CHANNEL_DATA' + (!!uniqueId ? '::' + uniqueId : ''), event);
+                        const suffix = uniqueId ? `::${uniqueId}` : '';
+                        this.emit(ConnectionEvent.ChannelDataPrefix + suffix, event);
                     }
                 }
                 break;

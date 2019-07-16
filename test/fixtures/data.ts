@@ -143,7 +143,7 @@ export const eventChannelData = [
     '',
 ].join('\n');
 
-export function cmdReply(msg?: string, err: boolean = false)
+export function cmdReply(msg?: string, err: boolean = false): string
 {
     return [
         'Content-Type: command/reply',

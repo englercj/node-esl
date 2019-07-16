@@ -519,10 +519,12 @@ export class Connection extends EventEmitter2
             }
         }
 
-        const options = {
+        const options: IDictionary<string> = {
             'execute-app-name': app,
-            'execute-app-arg': arg,
         };
+
+        if (typeof arg !== 'undefined' && arg.toString().length > 0)
+            options['execute-app-arg'] = arg.toString();
 
         if (this.type === ConnectionType.Inbound)
         {
@@ -815,6 +817,7 @@ export class Connection extends EventEmitter2
     private _onEvent(event: Event, headers: IDictionary<string>, body: string)
     {
         const uniqueId = event.getHeader('Job-UUID') || event.getHeader('Unique-ID') || event.getHeader('Core-UUID');
+        const suffix = uniqueId ? `::${uniqueId}` : '';
         let emitName = 'esl::event';
 
         // massage Content-Types into event names,
@@ -834,7 +837,6 @@ export class Connection extends EventEmitter2
                     if (this.type === ConnectionType.Outbound)
                     {
                         this._channelData = event;
-                        const suffix = uniqueId ? `::${uniqueId}` : '';
                         this.emit(ConnectionEvent.ChannelDataPrefix + suffix, event);
                     }
                 }
@@ -856,7 +858,7 @@ export class Connection extends EventEmitter2
             case 'text/event-json':
             case 'text/event-plain':
             case 'text/event-xml':
-                emitName += '::' + event.getHeader(HeaderNames.EventName) + (!!uuid ? '::' + uuid : '');
+                emitName += '::' + event.getHeader(HeaderNames.EventName) + suffix;
                 break;
 
             default:

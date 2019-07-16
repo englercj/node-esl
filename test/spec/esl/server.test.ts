@@ -148,19 +148,9 @@ function testServerEvent(done: Mocha.Done, server: Server, name: string, channel
 
     if (channelData)
     {
-        socket.on('data', function (buffer)
+        socket.on('data', function ()
         {
-            const str = buffer.toString('utf8');
-
-            if (str.indexOf('connect') !== -1)
-            {
-                socket.write(channelData + '\n');
-            }
-
-            if (server.bindEventsEnabled && str.indexOf('myevents') !== -1)
-            {
-                socket.write(channelData + '\n');
-            }
+            socket.write(channelData + '\n');
         });
     }
     else

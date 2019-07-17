@@ -244,7 +244,8 @@ export class Connection extends EventEmitter2
     {
         try
         {
-            this._socket.write(command + '\n');
+            this._socket.write(command);
+            this._socket.write('\n');
 
             if (args)
             {

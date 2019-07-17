@@ -5,26 +5,6 @@ import { Connection } from '../../src/esl/Connection';
 
 export type ITestSendArgs = [string] | [string, Partial<{ [key: string]: string }>];
 
-// export function testConnSend(args: ITestSendArgs, expected: Buffer)
-// {
-//     return {
-//         topic: getInboundConnection(function (err, result)
-//         {
-//             if (err || !result)
-//                 throw err;
-
-//             const conn = result.connection;
-//             conn.socket.once('data', (data) => this.callback(conn, data));
-//             conn.send.apply(conn, args); //('send me', { header1: 'val1', header2: 'val2' });
-//         }),
-//         'writes correct data': function (conn: Connection, data: Buffer)
-//         {
-//             expect(data).to.equal(expected); //'send me\nheader1: val1\nheader2: val2\n\n');
-//             conn.socket.end();
-//         },
-//     };
-// }
-
 export interface ITestServerOptions
 {
     port?: number;

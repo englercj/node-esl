@@ -7,6 +7,7 @@ import { setupSinonChai } from '../../fixtures/setup';
 import { Connection } from '../../../src/esl/Connection';
 import { ICallback } from '../../../src/utils';
 import { Event } from '../../../src/esl/Event';
+import { cmdReply } from '../../fixtures/data';
 
 setupSinonChai();
 
@@ -151,6 +152,43 @@ describe('esl.Connection', function ()
                     expect(evt.getHeader('Application')).to.equal('hangup');
                     done();
                 });
+            });
+        });
+
+        describe('.sendRecv()', function ()
+        {
+            it('Calls callback when the data is returned', function (done)
+            {
+                testConnection.socket.once('data', function (buffer)
+                {
+                    testConnection.socket.write(cmdReply());
+                });
+
+                testConnection.sendRecv('auth test_password', function (evt)
+                {
+                    expect(evt.getHeader('Content-Type')).to.equal('command/reply');
+                    expect(evt.getHeader('Reply-Text')).to.equal('+OK accepted');
+                    expect(evt.getHeader('Modesl-Reply-OK')).to.equal('accepted');
+                    done();
+                });
+            });
+
+            it('Fires `esl::event::command::reply`', function (done)
+            {
+                testConnection.socket.once('data', function ()
+                {
+                    testConnection.socket.write(cmdReply());
+                });
+
+                testConnection.once('esl::event::command::reply', function (evt)
+                {
+                    expect(evt.getHeader('Content-Type')).to.equal('command/reply');
+                    expect(evt.getHeader('Reply-Text')).to.equal('+OK accepted');
+                    expect(evt.getHeader('Modesl-Reply-OK')).to.equal('accepted');
+                    done();
+                });
+
+                testConnection.sendRecv('auth test_password');
             });
         });
 

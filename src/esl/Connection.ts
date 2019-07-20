@@ -45,34 +45,6 @@ export enum ConnectionEvent
     Ready = 'esl::ready',
 }
 
-//- function(host, port, password)
-//Initializes a new instance of ESLconnection, and connects to the
-// host $host on the port $port, and supplies $password to freeswitch.
-//
-//Intended only for an event socket in "Inbound" mode. In other words,
-// this is only intended for the purpose of creating a connection to
-// FreeSWITCH that is not initially bound to any particular call or channel.
-//
-//Does not initialize channel information (since inbound connections are
-// not bound to a particular channel). In plain language, this means that
-// calls to getInfo() will always return NULL.
-//
-//- function(fd)
-//Initializes a new instance of ESLconnection, using the existing file
-// number contained in $fd.
-//
-//Intended only for Event Socket Outbound connections. It will fail on
-// Inbound connections, even if passed a valid inbound socket.
-//
-//The standard method for using this function is to listen for an incoming
-// connection on a socket, accept the incoming connection from FreeSWITCH,
-// fork a new copy of your process if you want to listen for more connections,
-// and then pass the file number of the socket to new($fd).
-//
-//NOTE: The Connection class only supports 1 connection from FSW, the second
-//  ctor option will take in a net.Socket instance (gained from net.connect or
-//  on a server's connection event). For multiple connections use esl.Server
-
 /**
  * ESLconnection
  *
@@ -130,7 +102,6 @@ export class Connection extends EventEmitter2
                     this.emit(ConnectionEvent.Ready);
                 });
             });
-
         }
 
         socket.on('error', (err: Error) =>
@@ -175,6 +146,20 @@ export class Connection extends EventEmitter2
         });
     }
 
+    /**
+     * Create an inbound connection (from node -> FSW).
+     *
+     * Initializes a new Connection, and connects to the given `host` on `port`,
+     * and supplies `password` to freeswitch when it requests authentication.
+     *
+     * Intended only for an event socket in "Inbound" mode. In other words,
+     * this is only intended for the purpose of creating a connection to
+     * FreeSWITCH that is not initially bound to any particular call or channel.
+     *
+     * Does not initialize channel information (since inbound connections are
+     * not bound to a particular channel). In plain language, this means that
+     * calls to getInfo() will always return NULL.
+     */
     static createInbound(options: net.NetConnectOpts, password: string, readyCallback?: IConnectionReadyCallback): Connection;
     static createInbound(socket: net.Socket, password: string, readyCallback?: IConnectionReadyCallback): Connection;
     static createInbound(
@@ -193,13 +178,39 @@ export class Connection extends EventEmitter2
         return conn;
     }
 
+    /**
+     * Create an outbound connection (from FSW -> node).
+     *
+     * Initializes a new instance of ESLconnection, using the provided `socket`.
+     *
+     * Intended only for an event socket in "Outbound" mode. It will fail on
+     * Inbound connections, even if passed a valid inbound socket.
+     *
+     * The standard method for using this function is to listen for an incoming
+     * connection on a socket, accept the incoming connection from FreeSWITCH,
+     * and then pass the socket to this function.
+     *
+     * NOTE: The Connection class represents 1 connection from FSW. For multiple
+     * connections use esl.Server
+     */
     static createOutbound(socket: net.Socket, readyCallback?: IConnectionReadyCallback): Connection
     {
         return new Connection(socket, ConnectionType.Outbound, readyCallback);
     }
 
+    /**
+     * True if this connection is authenticated with FSW, false otherwise.
+     */
     get authed() { return this._authed; }
+
+    /**
+     * True if this we're still connecting to FSW, false otherwise.
+     */
     get connecting() { return this._connecting; }
+
+    /**
+     * The underlying node socket.
+     */
     get socket() { return this._socket; }
 
     /**
@@ -419,6 +430,9 @@ export class Connection extends EventEmitter2
         this.sendRecv(`filter ${header} ${value}`, cb);
     }
 
+    /**
+     * Deletes an event filter previously setup with [[Connection.filter]].
+     */
     filterDelete(header: string, cb?: IEventCallback): void;
     filterDelete(header: string, value: string, cb?: IEventCallback): void;
     filterDelete(header: string, valueOrCallback?: string | IEventCallback, cb?: IEventCallback): void
@@ -735,7 +749,7 @@ export class Connection extends EventEmitter2
     }
 
     /**
-     *
+     * Helper to actually dispatch api commands.
      */
     private _sendApiCommand(
         command: string,

@@ -6,4 +6,3 @@
 - Connection constructor now always takes a socket.
     * Added `createInbound` and `createOutbound` static methods instead of constructor overloads.
 - Show no longer accepts a format and always uses json.
-

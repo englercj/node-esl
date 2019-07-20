@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "watch": "tsc --watch --preserveWatchOutput -p tsconfig.json",
-    "test": "mocha -r ts-node/register test/spec/**/*.test.ts",
+    "test": "mocha -r ts-node/register test/spec/*.test.ts test/spec/**/*.test.ts",
     "docs": "typedoc ./src",
     "prepublishOnly": "npm run build",
     "postpublish": "npm run deploy",

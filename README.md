@@ -2,7 +2,7 @@
 
 A Library for handling low-level FreeSWITCH ESLconnections, and associated ESLevents.
 
-[Documentation](https://github.com/englercj/node-esl/wiki) - [Event Socket Library Spec](https://freeswitch.org/confluence/x/UgEQ)
+[API Documentation](http://englercj.github.com/node-esl/) - [API Events](https://github.com/englercj/node-esl/wiki) - [Event Socket Library Spec](https://freeswitch.org/confluence/x/UgEQ)
 
 ### Purpose
 

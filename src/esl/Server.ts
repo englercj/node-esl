@@ -32,11 +32,6 @@ export class Server extends EventEmitter2
 
     private _bindEvents: boolean;
 
-    /**
-     *
-     * @param [opts] Options for the server.
-     * @param [readyCb] Callback to be called when the server is ready to accept connections.
-     */
     constructor(readyCb?: IServerReadyCallback);
     constructor(options: IServerOptions, readyCb?: IServerReadyCallback);
     constructor(opts?: IServerOptions | IServerReadyCallback, readyCb?: IServerReadyCallback)
@@ -79,11 +74,19 @@ export class Server extends EventEmitter2
         }
     }
 
+    /**
+     * Returns true if constructed with `myevents`.
+     */
     bindEventsEnabled(): boolean
     {
         return this._bindEvents;
     }
 
+    /**
+     * Closes the server and stops listening for connections.
+     *
+     * @param callback Called when the server is closed.
+     */
     close(callback?: (err?: Error | undefined) => void): void
     {
         this.server.close(callback);

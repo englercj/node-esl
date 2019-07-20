@@ -162,6 +162,7 @@ describe('esl.Connection', function ()
                 testConnection.socket.once('data', function (buffer)
                 {
                     testConnection.socket.write(cmdReply());
+                    testConnection.socket.write('\n');
                 });
 
                 testConnection.sendRecv('auth test_password', function (evt)
@@ -178,6 +179,7 @@ describe('esl.Connection', function ()
                 testConnection.socket.once('data', function ()
                 {
                     testConnection.socket.write(cmdReply());
+                    testConnection.socket.write('\n');
                 });
 
                 testConnection.once('esl::event::command::reply', function (evt)
@@ -448,7 +450,9 @@ function sendChannelExecuteResponse(conn: Connection, appUuid: string, appName: 
     ].join('\n');
 
     conn.socket.write('Content-Type: text/event-plain\n');
-    conn.socket.write('Content-Length: ' + resp.length + '\n\n');
+    conn.socket.write('Content-Length: ');
+    conn.socket.write(resp.length.toString());
+    conn.socket.write('\n\n');
     conn.socket.write(resp);
 }
 

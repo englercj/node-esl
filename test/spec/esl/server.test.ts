@@ -148,7 +148,7 @@ function testServerEvent(done: Mocha.Done, server: Server, name: string, channel
 
     if (channelData)
     {
-        socket.on('data', function ()
+        socket.once('data', function ()
         {
             socket.write(channelData + '\n');
         });

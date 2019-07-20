@@ -79,17 +79,17 @@ export class Server extends EventEmitter2
         }
     }
 
-    bindEventsEnabled()
+    bindEventsEnabled(): boolean
     {
         return this._bindEvents;
     }
 
-    close(callback?: (err?: Error | undefined) => void)
+    close(callback?: (err?: Error | undefined) => void): void
     {
         this.server.close(callback);
     }
 
-    private _onConnection(socket: net.Socket)
+    private _onConnection(socket: net.Socket): void
     {
         const conn = new Connection(socket, ConnectionType.Outbound);
         const id = uuid.v4();

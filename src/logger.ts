@@ -9,7 +9,7 @@ class Logger
     get enabled() { return this._enabled; }
     get level() { return this._level; }
 
-    setLogFunction(logFunc: (msg: string) => void)
+    setLogFunction(logFunc: (msg: string) => void): void
     {
         this._logFunc = logFunc;
     }
@@ -22,7 +22,7 @@ class Logger
         return this._level;
     }
 
-    log(event: Event)
+    log(event: Event): void
     {
         const logLevelStr = event.getHeader('Log-Level') || '7';
         const logLevel = parseInt(logLevelStr, 10);

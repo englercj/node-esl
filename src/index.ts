@@ -28,7 +28,7 @@ import { logger } from './logger';
  * function is called, you can reduce the amount of log messages by calling this
  * function again with a `level` of 0, but it cannot be completely turned off.
  */
-export function setLogLevel(level: number)
+export function setLogLevel(level: number): void
 {
     logger.setLogLevel(level);
 }

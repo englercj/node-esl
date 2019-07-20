@@ -806,7 +806,7 @@ export class Connection extends EventEmitter2
     /**
      * Called when socket connects to FSW ESL Server or when we successfully listen to the fd
      */
-    private _onConnect()
+    private _onConnect(): void
     {
         this._parser = new Parser(this._socket);
 
@@ -820,7 +820,7 @@ export class Connection extends EventEmitter2
     /**
      * When we get a generic ESLevent from FSW
      */
-    private _onEvent(event: Event, headers: IDictionary<string>, body: string)
+    private _onEvent(event: Event, headers: IDictionary<string>, body: string): void
     {
         const uniqueId = event.getHeader('Job-UUID') || event.getHeader('Unique-ID') || event.getHeader('Core-UUID');
         const suffix = uniqueId ? `::${uniqueId}` : '';

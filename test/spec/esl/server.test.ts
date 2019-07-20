@@ -1,8 +1,9 @@
 import * as net from 'net';
 import { expect } from 'chai';
-import { eventChannelData } from '../../fixtures/data';
+import { eventChannelData, cmdReply } from '../../fixtures/data';
 import { getServer } from '../../fixtures/helpers';
 import { Server } from '../../../src/esl/Server';
+import { Connection } from '../../../src/esl/Connection';
 
 describe('esl.Server', function ()
 {
@@ -130,33 +131,49 @@ function testServerEvent(done: Mocha.Done, server: Server, name: string, channel
 
     const socket = net.connect({ port: address.port });
 
-    const timeout = setTimeout(function ()
+    let msg = '';
+    const onData = function (b: Buffer)
     {
-        socket.end();
-        done(new Error("Connection Timeout"));
-    }, 1500);
+        msg += b.toString('utf8');
 
-    server.once(name, function(c, id)
+        if (msg.indexOf('connect\n\n') === 0)
+        {
+            socket.write(cmdReply());
+            socket.write('\n');
+            if (!channelData)
+                socket.end();
+            else
+                msg = '';
+        }
+        else if (channelData && msg.indexOf('event json BACKGROUND_JOB CHANNEL_EXECUTE_COMPLETE\n\n') === 0)
+        {
+            socket.write(channelData);
+            socket.write('\n');
+        }
+    };
+
+    const onEvent = function (c: Connection, id: string)
+    {
+        expect(id).to.not.be.null;
+        end();
+    };
+
+    const end = function (err?: Error)
     {
         clearTimeout(timeout);
-
-        expect(id).to.not.be.null;
-
+        socket.removeListener(name, onEvent);
+        socket.removeListener('data', onData);
         socket.end();
-        done();
-    });
+        done(err);
+    };
 
-    if (channelData)
+    const timeout = setTimeout(function ()
     {
-        socket.once('data', function ()
-        {
-            socket.write(channelData + '\n');
-        });
-    }
-    else
-    {
-        socket.end();
-    }
+        end(new Error("Connection Timeout"));
+    }, 1500);
+
+    socket.on('data', onData);
+    server.once(name, onEvent);
 }
 
 function testServerInstance(server: Server)

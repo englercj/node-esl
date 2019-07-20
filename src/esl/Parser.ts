@@ -24,7 +24,7 @@ export type IHeadersMap = Partial<{ [key: string]: string }>;
 
 export class Parser extends EventEmitter2
 {
-    buffer = Buffer.alloc(0);
+    buffer: Buffer = Buffer.alloc(0);
 
     private _bodyLen = 0;
     private _encoding = 'utf8';

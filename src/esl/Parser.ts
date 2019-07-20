@@ -121,7 +121,7 @@ export class Parser extends EventEmitter2
         return { error, headers };
     }
 
-    private _onData(data: Buffer)
+    private _onData(data: Buffer): void
     {
         this.buffer = Buffer.concat([this.buffer, data], this.buffer.length + data.length);
 
@@ -131,11 +131,11 @@ export class Parser extends EventEmitter2
             this._parseHeaders();
     }
 
-    private _onEnd()
+    private _onEnd(): void
     {
     }
 
-    private _indexOfHeaderEnd()
+    private _indexOfHeaderEnd(): number
     {
         for (let i = 0, len = this.buffer.length - 1; i < len; ++i)
         {
@@ -149,7 +149,7 @@ export class Parser extends EventEmitter2
         return -1;
     }
 
-    private _parseHeaders()
+    private _parseHeaders(): void
     {
         // get end of header marker
         const headEnd = this._indexOfHeaderEnd();
@@ -185,7 +185,7 @@ export class Parser extends EventEmitter2
         }
     }
 
-    private _parseBody()
+    private _parseBody(): void
     {
         if (this.buffer.length < this._bodyLen)
             return;
@@ -199,7 +199,7 @@ export class Parser extends EventEmitter2
         this._parseHeaders();
     }
 
-    private _parseEvent(body: string)
+    private _parseEvent(body: string): void
     {
         let data: IHeadersMap | null = null;
 

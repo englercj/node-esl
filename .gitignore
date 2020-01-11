@@ -18,5 +18,7 @@ Desktop.ini
 \#*#
 
 # node.js common ignores
+dist/
+docs/
 node_modules/
 npm-debug.log

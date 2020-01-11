@@ -37,28 +37,28 @@
     "deploy": "gh-pages --dotfiles -d docs"
   },
   "dependencies": {
-    "eventemitter2": "^5.0.1",
-    "uuid": "^3.3.2",
-    "xml2js": "^0.4.19"
+    "eventemitter2": "^6.0.0",
+    "uuid": "^3.3.3",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.8",
-    "@types/sinon": "^7.0.13",
-    "@types/sinon-chai": "^3.2.2",
-    "@types/uuid": "^3.4.5",
-    "@types/xml2js": "^0.4.4",
+    "@types/sinon": "^7.5.1",
+    "@types/sinon-chai": "^3.2.3",
+    "@types/uuid": "^3.4.6",
+    "@types/xml2js": "^0.4.5",
     "chai": "^4.2.0",
-    "cross-env": "^5.2.0",
-    "gh-pages": "^2.0.1",
-    "mocha": "^6.2.0",
-    "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0",
-    "ts-node": "^8.3.0",
-    "typedoc": "^0.14.2",
+    "cross-env": "^6.0.3",
+    "gh-pages": "^2.2.0",
+    "mocha": "^7.0.0",
+    "sinon": "^8.0.4",
+    "sinon-chai": "^3.4.0",
+    "ts-node": "^8.6.1",
+    "typedoc": "^0.15.8",
     "typedoc-md-theme": "^1.0.1",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.4"
   },
   "engines": {
     "node": ">=8.x"

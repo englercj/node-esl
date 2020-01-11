@@ -38,7 +38,7 @@
     "test": "grunt test"
   },
   "engines": {
-    "node": ">=1.x"
+    "node": ">=4.x"
   },
   "config": {
     "blanket": {

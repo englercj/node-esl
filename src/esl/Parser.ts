@@ -27,10 +27,10 @@ export class Parser extends EventEmitter2
     buffer: Buffer = Buffer.alloc(0);
 
     private _bodyLen = 0;
-    private _encoding:BufferEncoding = 'utf8';
+    private _encoding: BufferEncoding = 'utf8';
     private _headers: IHeadersMap = {};
 
-    constructor(public socket: net.Socket, encoding:BufferEncoding = 'utf8')
+    constructor(public socket: net.Socket, encoding: BufferEncoding = 'utf8')
     {
         super({
             wildcard: true,
@@ -38,7 +38,7 @@ export class Parser extends EventEmitter2
             maxListeners: 25,
         });
 
-        this._encoding= encoding;
+        this._encoding = encoding;
 
         socket.on('data', this._onData.bind(this));
         socket.on('end', this._onEnd.bind(this));

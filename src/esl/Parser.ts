@@ -30,7 +30,7 @@ export class Parser extends EventEmitter2
     private _encoding = 'utf8';
     private _headers: IHeadersMap = {};
 
-    constructor(public socket: net.Socket, encoding = 'utf8')
+    constructor(public socket: net.Socket, encoding: BufferEncoding = 'utf8')
     {
         super({
             wildcard: true,

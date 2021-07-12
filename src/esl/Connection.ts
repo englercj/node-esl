@@ -110,7 +110,7 @@ export class Connection extends EventEmitter2
         });
 
         // Emit end when stream closes
-        socket.on('end', () =>
+        socket.on('close', () =>
         {
             this.emit(ConnectionEvent.End);
         });

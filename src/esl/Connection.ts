@@ -679,7 +679,6 @@ export class Connection extends EventEmitter2
         this.bgapi(`show ${item} as json`, (event) =>
         {
             const body = event.getBody();
-            let parsed = {};
 
             if (body.indexOf('-ERR') !== -1)
             {

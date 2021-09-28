@@ -27,7 +27,7 @@ export class Parser extends EventEmitter2
     buffer: Buffer = Buffer.alloc(0);
 
     private _bodyLen = 0;
-    private _encoding = 'utf8';
+    private _encoding: BufferEncoding = 'utf8';
     private _headers: IHeadersMap = {};
 
     constructor(public socket: net.Socket, encoding: BufferEncoding = 'utf8')

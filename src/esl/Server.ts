@@ -19,6 +19,7 @@ export enum ServerEvent
     ConnectionOpen = 'connection::open',
     ConnectionReady = 'connection::ready',
     ConnectionClose = 'connection::close',
+    ConnectionError = 'connection::error',
     Ready = 'ready',
 }
 
@@ -101,6 +102,10 @@ export class Server extends EventEmitter2
 
         this.emit(ServerEvent.ConnectionOpen, conn, id);
 
+        conn.on(ConnectionEvent.Error, (err) => {
+            this.emit(ServerEvent.ConnectionError, err, conn, id);
+        })
+
         conn.on(ConnectionEvent.Ready, () =>
         {
             if (this._bindEvents)
@@ -116,7 +121,7 @@ export class Server extends EventEmitter2
             }
         });
 
-        conn.on('esl::end', () =>
+        conn.on(ConnectionEvent.End, () =>
         {
             this.emit(ServerEvent.ConnectionClose, conn, id);
             delete this.connections[id];

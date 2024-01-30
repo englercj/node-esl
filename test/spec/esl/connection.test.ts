@@ -4,7 +4,7 @@ import * as sinon from 'sinon';
 import { expect } from 'chai';
 import { getEchoServerAndSocket, getInboundConnection, ITestSendArgs } from '../../fixtures/helpers';
 import { setupSinonChai } from '../../fixtures/setup';
-import { Connection } from '../../../src/esl/Connection';
+import { Connection, ExecuteArg } from '../../../src/esl/Connection';
 import { ICallback } from '../../../src/utils';
 import { Event } from '../../../src/esl/Event';
 import { cmdReply } from '../../fixtures/data';
@@ -129,7 +129,9 @@ describe('esl.Connection', function ()
 
             it('Invokes the callback', function (done)
             {
-                testChannelExecute(testConnection, 'playback', 'foo', id0, function (evt)
+                testChannelExecute(testConnection, 'playback', {
+                    'execute-app-arg': 'foo'
+                }, id0, function (evt)
                 {
                     expect(evt.getHeader('Application')).to.equal('playback');
                     done();
@@ -138,7 +140,9 @@ describe('esl.Connection', function ()
 
             it('Invokes the callback only once for the same session', function (done)
             {
-                testChannelExecute(testConnection, 'hangup', '', id0, function (evt)
+                testChannelExecute(testConnection, 'hangup', {
+                    'execute-app-arg': ''
+                }, id0, function (evt)
                 {
                     expect(evt.getHeader('Application')).to.equal('hangup');
                     done();
@@ -147,7 +151,9 @@ describe('esl.Connection', function ()
 
             it('Invokes the callback again for a new session', function (done)
             {
-                testChannelExecute(testConnection, 'hangup', '', id1, function (evt)
+                testChannelExecute(testConnection, 'hangup', {
+                    'execute-app-arg': '',
+                }, id1, function (evt)
                 {
                     expect(evt.getHeader('Application')).to.equal('hangup');
                     done();
@@ -456,7 +462,7 @@ function sendChannelExecuteResponse(conn: Connection, appUuid: string, appName: 
     conn.socket.write(resp);
 }
 
-function testChannelExecute(conn: Connection, appName: string, appArg: string, requestId: string, cb: ICallback<Event>)
+function testChannelExecute(conn: Connection, appName: string, appArg: ExecuteArg, requestId: string, cb: ICallback<Event>)
 {
     conn.socket.once('data', function (data)
     {
@@ -468,9 +474,11 @@ function testChannelExecute(conn: Connection, appName: string, appArg: string, r
         expect(lines).to.contain(`execute-app-name: ${appName}`);
         expect(lines.some(x => x.includes('Event-UUID: '))).to.be.true;
 
-        if (appArg)
+        const arg: string | undefined = appArg['execute-app-arg'];
+
+        if (arg)
         {
-            expect(lines).to.contain(`execute-app-arg: ${appArg}`);
+            expect(lines).to.contain(`execute-app-arg: ${arg}`);
         }
         else
         {

@@ -45,6 +45,10 @@ export enum ConnectionEvent
     Ready = 'esl::ready',
 }
 
+export type ExecuteArg = {
+    'execute-app-arg'?: string,
+    [key: string]: string | undefined };
+
 /**
  * ESLconnection
  *
@@ -513,11 +517,11 @@ export class Connection extends EventEmitter2
      * or "-ERR [Error Message]" on failure.
      */
     execute(app: string, cb?: IEventCallback): string;
-    execute(app: string, arg: string, cb?: IEventCallback): string;
-    execute(app: string, arg: string, uuid: string, cb?: IEventCallback): string;
-    execute(app: string, argOrCallback?: string | IEventCallback, uuidOrCallback?: string | IEventCallback, cb?: IEventCallback): string
+    execute(app: string, arg: ExecuteArg, cb?: IEventCallback): string;
+    execute(app: string, arg: ExecuteArg, uuid: string, cb?: IEventCallback): string;
+    execute(app: string, argOrCallback?: ExecuteArg | IEventCallback, uuidOrCallback?: string | IEventCallback, cb?: IEventCallback): string
     {
-        let arg = '';
+        let arg: ExecuteArg = {};
         let uniqueId = uuid.v4();
 
         if (typeof argOrCallback === 'function')
@@ -539,12 +543,15 @@ export class Connection extends EventEmitter2
             }
         }
 
+        const { 'execute-app-arg': executeAppArg, ...headers }: ExecuteArg = arg;
+
         const options: IDictionary<string> = {
             'execute-app-name': app,
+            ...headers
         };
 
-        if (typeof arg !== 'undefined' && arg.toString().length > 0)
-            options['execute-app-arg'] = arg.toString();
+        if (typeof executeAppArg !== 'undefined' && executeAppArg.toString().length > 0)
+            options['execute-app-arg'] = executeAppArg.toString();
 
         if (this.type === ConnectionType.Inbound)
         {
@@ -568,14 +575,14 @@ export class Connection extends EventEmitter2
      * "async: true" header in the message sent to the channel.
      */
     executeAsync(app: string, cb?: IEventCallback): string;
-    executeAsync(app: string, arg: string, cb?: IEventCallback): string;
-    executeAsync(app: string, arg: string, uuid: string, cb?: IEventCallback): string;
-    executeAsync(app: string, argOrCallback?: string | IEventCallback, uuidOrCallback?: string | IEventCallback, cb?: IEventCallback): string
+    executeAsync(app: string, arg: ExecuteArg, cb?: IEventCallback): string;
+    executeAsync(app: string, arg: ExecuteArg, uuid: string, cb?: IEventCallback): string;
+    executeAsync(app: string, argOrCallback?: ExecuteArg | IEventCallback, uuidOrCallback?: string | IEventCallback, cb?: IEventCallback): string
     {
         const oldAsyncValue = this.execAsync;
         this.execAsync = true;
 
-        const eventUuid = this.execute(app, argOrCallback as string, uuidOrCallback as string, cb);
+        const eventUuid = this.execute(app, argOrCallback as ExecuteArg, uuidOrCallback as string, cb);
 
         this.execAsync = oldAsyncValue;
 
@@ -792,7 +799,7 @@ export class Connection extends EventEmitter2
 
         // this method of event tracking is based on:
         // http://lists.freeswitch.org/pipermail/freeswitch-users/2013-May/095329.html
-        const eventUuid = uuid.v4();
+        const eventUuid = args['Event-UUID'] ?? uuid.v4();
         args['Event-UUID'] = eventUuid;
 
         const eventName = `esl::event::CHANNEL_EXECUTE_COMPLETE::${uniqueId}`;
